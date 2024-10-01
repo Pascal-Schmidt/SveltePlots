@@ -6,9 +6,11 @@
 
 <br />
 
+<!-- HTML content for pkgdown site -->
 <div>
-<iframe src="https://Pascal-Schmidt.github.io/SveltePlots/docs/examples.html" width="100%" height=1900"></iframe>
+<iframe src="https://Pascal-Schmidt.github.io/SveltePlots/examples.html" width="100%" height="1900"></iframe>
 </div>
+
 
 ## Key Features
 
@@ -73,6 +75,12 @@ sp(
 ) %>% 
   sp_title("Penguins", font_size = 26)
 ```
+
+<!-- HTML content for pkgdown site -->
 <div>
 <iframe src="https://Pascal-Schmidt.github.io/SveltePlots/docs/penguins.html" width="800" height=600"></iframe>
 </div>
+
+<!-- Fallback for GitHub front page -->
+👉 [View the penguins plot](https://Pascal-Schmidt.github.io/SveltePlots/penguins.html)
+
