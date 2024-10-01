@@ -1,0 +1,451 @@
+---
+title: "Shiny"
+author: Pascal Schmidt
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Shiny}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Select all elements with class 'row' and remove the class
+    var elements = document.querySelectorAll('.row');
+    elements.forEach(function(el) {
+      el.classList.remove('row');
+    });
+  });
+</script>
+
+
+<style>
+.shiny-app-frame {
+  position: relative;
+  left: 0;
+  top: 25px;
+  bottom: 0;
+  right: 0;
+}
+
+h1, .h1 {
+  padding-top: 50px;
+}
+
+.shiny-app-frame iframe {
+  width: 100%;
+  max-width: 1200px;
+}
+
+#toc {
+  display: none;
+}
+</style>
+
+The main motivation to build `SveltePlots` was that we did not want to use proxy functions anymore for our dashboards and did not want to figure out incremental updates for our charts. Below is an example of a time-series chart which removes and adds departments only when they are being removed or added. One important thing to note is that this will only happen if we coerce the department variable into a factor so R can keep the color mapping consistent. This ensures that Svelte knows which color corresponds to which line and can make the updates accordingly. 
+
+<details><summary>Click here</summary>
+
+```{r eval=FALSE}
+library(shiny)
+library(dplyr)
+library(SveltePlots)
+data("walmart_sales_weekly")
+walmart_sales_weekly <- walmart_sales_weekly %>%
+  dplyr::mutate(
+    Dept = as.factor(Dept)
+  )
+
+departments <- unique(walmart_sales_weekly$Dept)
+
+# UI
+ui <- fluidPage(
+  titlePanel("Walmart Sales Dashboard"),
+  
+  fluidRow(
+    column(
+      12,
+      # Date range input
+      dateRangeInput(
+        inputId = "date_range",
+        label = "Select Date Range",
+        start = min(walmart_sales_weekly$Date),
+        end = max(walmart_sales_weekly$Date)
+      )
+    ),
+    
+    column(
+      12,
+      # Multi-select input for departments with all selected by default
+      selectInput(
+        inputId = "departments",
+        label = "Select Departments",
+        choices = departments,
+        selected = departments,
+        multiple = TRUE
+      )
+    )
+  ),
+  
+  fluidRow(
+    column(
+      12,
+      SveltePlotsOutput("sales_data")
+    )
+  )
+)
+
+# Server logic
+server <- function(input, output) {
+
+  filtered_data <- reactive({
+    walmart_sales_weekly %>%
+      filter(
+        Date >= input$date_range[1],
+        Date <= input$date_range[2],
+        Dept %in% input$departments
+      )
+  })
+
+  output$sales_data <- SveltePlots::renderSveltePlots(
+    sp(
+      data = filtered_data(),
+      spaes(x = Date, y = Weekly_Sales, group = Dept),
+      type = "line"
+    ) 
+  )
+}
+
+# Run the application
+shinyApp(ui = ui, server = server, options = list(host = "0.0.0.0", port = 3838))
+```
+
+</details>
+
+<div class="shiny-app-frame"> 
+<iframe id="iframe-walmart" style="height: 800px;" src="https://svelter-demo-266324798061.us-central1.run.app/walmart" frameborder="0">
+</iframe>
+</div>
+
+<br></br>
+
+We also wanted to get rid of the `rendereUI()` function to only add or remove charts based on the specific groupings selected. Ideally it would work with mixed chart types but is currently only available with the same chart type and works by using the `sp_facet()` function.
+
+<details><summary>Click here</summary>
+
+```{r eval=FALSE}
+library(dplyr)
+library(shiny)
+library(SveltePlots)
+
+data("gapminder")
+gapminder <- gapminder %>%
+  dplyr::filter(year == 2007)
+
+custom_css_titles <- "background-color: grey; color: white;
+                      text-align: center; padding: 10px;
+                      border-radius: 5px;"
+
+continents <- unique(gapminder$continent)
+
+ui <- fluidPage(
+  class = "container",
+  fluidRow(
+    column(
+      12,
+      selectInput(
+        inputId = "continents",
+        label = "Select Continents",
+        choices = continents,
+        selected = continents,
+        multiple = TRUE
+      )
+    ),
+
+    fluidRow(
+      column(
+        12,
+        SveltePlotsOutput("gapminder_data")
+      )
+    )
+  )
+)
+
+server <- function(input, output) {
+
+  filtered_data <- reactive({
+    gapminder %>%
+      filter(
+        continent %in% input$continents
+      )
+  })
+
+  output$gapminder_data <- SveltePlots::renderSveltePlots(
+    sp(
+      data = filtered_data(),
+      spaes(x = gdpPercap, y = lifeExp),
+      "points",
+      facet_var = "continent",
+      include_legend = FALSE
+    ) %>%
+      sp_title(custom_css = custom_css_titles) %>%
+      sp_facet(scales = "free")
+  )
+
+}
+
+shinyApp(ui = ui, server = server, options = list(host = "0.0.0.0", port = 3838))
+```
+
+</details>
+
+<div class="shiny-app-frame"> 
+<iframe id="iframe-renderui" style="height: 2000px;" src="https://svelter-demo-266324798061.us-central1.run.app/RenderUI" frameborder="0">
+</iframe>
+</div>
+
+<br></br>
+
+One draw back is that it does not work with multiple different chart types unfortunately. We have not implemented an API for it yet but one work around would be to create multiple different charts and create a list with the chart specifications. The function below is an internal function in the `SveltePlots` package that sends the chart specification to svelte to create the chart. 
+
+So in the code below, the bulk of the work is done by just specifying the different chart types which will create most of the chart specifications. We can get the chart specification with name_of_chart_variable$x$list_input[[1]].  Because we are not using the `sp_facet()` function, we need to add `facet_col` and `facet_row` manually. We also need to specify a unique id manually, so Svelte knows which chart to remove from the page andd which ones to leave on there without re-creating it. 
+
+Lastly, we put each chart specification in a list and then call the `SveltePlots` function to create the charts. 
+
+```{r message=FALSE, warning=FALSE, fig.width=10, fig.height=6}
+library(dplyr)
+library(SveltePlots)
+data("gapminder")
+
+density_chart <- sp(
+  data = gapminder,
+  spaes(x = lifeExp, group = continent),
+  "density",
+  height = 500
+) %>% 
+  sp_x_axis(
+    rotation_axis_ticks = 90,
+    text_anchor = "end"
+  )
+
+scatter_plot <- sp(
+  data = gapminder %>% 
+    dplyr::filter(year == "2007"),
+  spaes(x = gdpPercap, y = lifeExp, group = continent),
+  "points",
+  height = 500
+) %>% 
+  sp_x_axis(
+    rotation_axis_ticks = 90,
+    text_anchor = "end"
+  )
+
+bar_chart <- sp(
+  data = gapminder %>% 
+    dplyr::filter(year == "2007") %>% 
+    dplyr::count(continent),
+  spaes(x = continent, y = n),
+  "bar",
+  height = 500
+) %>% 
+  sp_x_axis(
+    rotation_axis_ticks = 90,
+    text_anchor = "end"
+  )
+
+# manually specify how many columns and rows for each chart specification
+density_chart$x$list_input[[1]]$facet_col <- 3
+density_chart$x$list_input[[1]]$facet_row <- 1
+scatter_plot$x$list_input[[1]]$facet_col <- 3
+scatter_plot$x$list_input[[1]]$facet_row <- 1
+bar_chart$x$list_input[[1]]$facet_col <- 3
+bar_chart$x$list_input[[1]]$facet_row <- 1
+
+# manually specify the id for the keyed update
+density_chart$x$list_input[[1]]$id <- "density"
+scatter_plot$x$list_input[[1]]$id <- "scatter"
+bar_chart$x$list_input[[1]]$id <- "bar"
+
+chart_specs <- list(
+  "density" = density_chart$x$list_input[[1]], 
+  "scatter" = scatter_plot$x$list_input[[1]], 
+  "bar" = bar_chart$x$list_input[[1]]
+)
+
+SveltePlots <- function(list_input) {
+
+  # forward options using x
+  x <- list(
+    list_input = list_input
+  )
+
+  attr(x, 'TOJSON_ARGS') <- list(dataframe = "rows")
+
+  # create widget
+  sp <- htmlwidgets::createWidget(
+    name = "SveltePlots",
+    x,
+    sizingPolicy = htmlwidgets::sizingPolicy(
+      defaultWidth = "100%",
+      defaultHeight = 800,
+      browser.fill = TRUE,
+      padding = 10
+    ),
+    package = "SveltePlots"
+  )
+
+  return(sp)
+
+}
+
+SveltePlots(unname(chart_specs))
+```
+
+<details><summary>Click here</summary>
+
+```{r eval = FALSE}
+library(shiny)
+library(dplyr)
+library(SveltePlots)
+
+data("gapminder")
+
+density_chart <- sp(
+  data = gapminder,
+  spaes(x = lifeExp, group = continent),
+  "density"
+) %>% 
+  sp_x_axis(
+    rotation_axis_ticks = 90,
+    text_anchor = "end"
+  )
+
+scatter_plot <- sp(
+  data = gapminder %>%
+    dplyr::filter(year == "2007"),
+  spaes(x = gdpPercap, y = lifeExp, group = continent),
+  "points"
+) %>% 
+  sp_x_axis(
+    rotation_axis_ticks = 90,
+    text_anchor = "end"
+  )
+
+bar_chart <- sp(
+  data = gapminder %>%
+    dplyr::filter(year == "2007") %>%
+    dplyr::count(continent),
+  spaes(x = continent, y = n),
+  "bar"
+) %>% 
+  sp_x_axis(
+    rotation_axis_ticks = 90,
+    text_anchor = "end"
+  )
+
+# manually specify how many columns and rows for each chart specification
+density_chart$x$list_input[[1]]$facet_col <- 3
+density_chart$x$list_input[[1]]$facet_row <- 1
+scatter_plot$x$list_input[[1]]$facet_col <- 3
+scatter_plot$x$list_input[[1]]$facet_row <- 1
+bar_chart$x$list_input[[1]]$facet_col <- 3
+bar_chart$x$list_input[[1]]$facet_row <- 1
+
+# manually specify the id for the keyed update
+density_chart$x$list_input[[1]]$id <- "density"
+scatter_plot$x$list_input[[1]]$id <- "scatter"
+bar_chart$x$list_input[[1]]$id <- "bar"
+
+chart_specs <- list(
+  "scatter" = scatter_plot$x$list_input[[1]],
+  "density" = density_chart$x$list_input[[1]],
+  "bar" = bar_chart$x$list_input[[1]]
+)
+
+SveltePlots <- function(list_input) {
+
+  # forward options using x
+  x <- list(
+    list_input = list_input
+  )
+
+  attr(x, 'TOJSON_ARGS') <- list(dataframe = "rows")
+
+  # create widget
+  sp <- htmlwidgets::createWidget(
+    name = "SveltePlots",
+    x,
+    sizingPolicy = htmlwidgets::sizingPolicy(
+      defaultWidth = "100%",
+      defaultHeight = 800,
+      browser.fill = TRUE,
+      padding = 10
+    ),
+    package = "SveltePlots"
+  )
+
+  return(sp)
+
+}
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+
+    # Application title
+    titlePanel("RenderUI Example With Multiple Charts"),
+
+    fluidRow(
+      column(
+        12,
+        selectInput(
+          inputId = "plot_type",
+          label = "Choose plot type:",
+          choices = c(
+            "Density" = "density",
+            "Scatter" = "scatter",
+            "Bar" = "bar"
+          ),
+          selected = c("density", "scatter", "bar"),
+          multiple = TRUE
+        )
+      )
+    ),
+
+    fluidRow(
+      column(
+        12,
+        SveltePlotsOutput("gapminder_data")
+      )
+    )
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+
+  filtered_data <- reactive({
+    chart_specs2 <- chart_specs[names(chart_specs) %in% input$plot_type]
+    length_chart_specs2 <- length(chart_specs2)
+    chart_specs2 <- unname(chart_specs2)
+    for (i in seq_along(chart_specs2)) {
+      chart_specs2[[i]]$facet_col <- length_chart_specs2
+    }
+    return(chart_specs2)
+  })
+
+  output$gapminder_data <- SveltePlots::renderSveltePlots(
+    SveltePlots(filtered_data())
+  )
+}
+
+# Run the application
+shinyApp(ui = ui, server = server, options = list(host = "0.0.0.0", port = 3838))
+
+```
+
+</details>
+
+<div class="shiny-app-frame"> 
+<iframe id="iframe-renderui" style="height: 800px;" src="https://svelter-demo-266324798061.us-central1.run.app/RenderUI2" frameborder="0">
+</iframe>
+</div>

@@ -1,0 +1,27 @@
+Package: SveltePlots
+Type: Package
+Version: 0.1.0
+Title: A Wrapper for a Svelte Custom Web Component
+Authors@R: 
+  person("Pascal", "Schmidt", role = c("aut", "cre"), email = "pascal.sfu@gmail.com")
+Author: Pascal Schmidt [aut, cre]
+Maintainer: Pascal Schmidt <pascal.sfu@gmail.com>
+Description: SveltePlots is an interactive charting library which aims to easily produce SVG charts. 
+  In addition to that is was developed to remove renderUI, insertUI, removeUI, and proxy function through Svelte's excellent state management. 
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.1
+Suggests: 
+    testthat (>= 3.0.0),
+    lubridate,
+    rmarkdown,
+    quarto,
+    knitr,
+    covr,
+    ggplot2
+Config/testthat/edition: 3
+Imports: data.table, htmlwidgets, magrittr, dplyr, rlang, RColorBrewer, padr, purrr, stringr, tibble, tidyr
+Depends: 
+    R (>= 2.10)
+Language: en-US

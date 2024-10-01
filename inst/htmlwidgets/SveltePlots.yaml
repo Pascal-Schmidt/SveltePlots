@@ -1,0 +1,7 @@
+# (uncomment to add a dependency)
+dependencies:
+  - name: chart_group
+    version: 0.2
+    src: htmlwidgets/lib
+    script:
+      - my-library.umd.js

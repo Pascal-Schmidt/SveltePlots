@@ -1,0 +1,17 @@
+^.*\.Rproj$
+^\\..Rcheck$
+^\.Rproj\.user$
+^\.DS_Store$
+^\.git$
+^\.gitignore$
+^inst/.*\.DS_Store$
+^_pkgdown\.yml$
+^pkgdown\.yml$
+^examples\.R$
+^pkgdown$
+^LICENSE\.md$
+vignettes
+apps
+docs
+^cran-comments\.md$
+
