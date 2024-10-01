@@ -7,7 +7,7 @@
 <br />
 
 <div>
-<iframe src="examples.html" width="100%" height=1900"></iframe>
+<iframe src="https://Pascal-Schmidt.github.io/SveltePlots/docs/examples.html" width="100%" height=1900"></iframe>
 </div>
 
 ## Key Features
@@ -74,5 +74,5 @@ sp(
   sp_title("Penguins", font_size = 26)
 ```
 <div>
-<iframe src="penguins.html" width="800" height=600"></iframe>
+<iframe src="https://Pascal-Schmidt.github.io/SveltePlots/docs/penguins.html" width="800" height=600"></iframe>
 </div>
