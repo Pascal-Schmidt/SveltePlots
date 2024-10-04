@@ -6,11 +6,12 @@ url: ~
 template:
   bslib:
     version: 5
-    primary: "#02263E"
+    primary: "#3E4A61"
+    secondary: "#A7B3C1"
     base_font_size: "18px"
     code_font_size: "16px"
-    base_font: {google: "Kanit"}
-    heading_font: {google: "Lilita One"}
+    base_font: {google: "Roboto"}
+    heading_font: {google: "Montserrat"}
 
 navbar:
  bg: primary
@@ -28,3 +29,39 @@ navbar:
         href: articles/SveltePlotDetails.html
       - text: Shiny
         href: articles/Shiny.html
+
+reference:
+  - title: "Main Plotting Functions"
+    contents:
+      - SveltePlotsOutput
+      - renderSveltePlots
+      - sp
+      - spaes
+
+  - title: "Plot Customization"
+    contents:
+      - sp_add_arrows
+      - sp_add_segments
+      - sp_add_series
+      - sp_add_text
+      - sp_facet
+      - sp_title
+      - sp_tooltip
+      - sp_x_axis
+      - sp_y_axis
+
+  - title: "Datasets"
+    contents:
+      - CO2
+      - Plant Growth Dataset
+      - confidence_intervals
+      - dau
+      - economics
+      - fruit
+      - gapminder
+      - penguins
+      - purchases_age
+      - quests
+      - segments
+      - walmart_sales_weekly
+
