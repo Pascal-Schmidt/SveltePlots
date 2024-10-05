@@ -313,6 +313,8 @@ sp
 
 ## Annotations
 
+We can add annotations with the `sp_add_segments`, `sp_add_arrows`, and `sp_add_text` functions. The `sp_add_segments` function automatically adds a legend to the chart which we can click. If we do, there is a popup which we can drag around on the chart. That becomes useful if there are multiple segments on the chart whoich are overlapping and we would like to drag them into certain positions. A double click will make the popups disappear again.
+
 ```{r}
 data("purchases")
 sp(
@@ -337,7 +339,7 @@ sp(
     tooltip = F
     ) %>% 
   sp_add_segments(
-    x_start = "2000-01-01", x_end = "2000-01-05",
+    x_start = "2000-01-12", x_end = "2000-01-17",
     y_start = "auto", y_end ="auto",
     type = "rect", 
     opacity = 0.2,
@@ -348,18 +350,18 @@ sp(
     tooltip = "Revenue: <strong>$13179</strong>"
   ) %>% 
   sp_add_arrows(
-    x_start = c("2000-03-01", "2000-02-01"), x_end = c("2000-01-01", "2000-01-01"),
+    x_start = c("2000-03-01", "2000-03-01"), x_end = c("2000-01-15", "2000-01-15"),
     y_start = c(8000, 12000), y_end = c(10000, 13000),
     arrow_head = c(0, 0),
     size = c(200, 200), 
-    curvature = c(0.2, 0.3), 
+    curvature = c(0.2, 0.4), 
     direction = c("downward", "downward"), 
     color = c("black", "black"),
     arrow_head_type = c("triangle", "triangle")
   ) %>% 
   sp_add_text(
     x = c("2000-02-01", "2000-02-20"),
-    y = c(12000, 8500),
+    y = c(12500, 8500),
     text = c(
       "This was the highest revenue day",
       "Window of Some Event Happening"
@@ -369,9 +371,13 @@ sp(
 
 ## Segments
 
+If we click on the letter I, we can see a lot more popups which we can drag around on the chart to see to which event they correspnd to. 
+
 ```{r fig.height=6}
 data("segments")
 data("dau")
+
+head(segments)
 
 sp <- sp(
   data = dau, 
@@ -400,13 +406,15 @@ sp <- sp(
     tooltip = unlist(segments$extra_details),
     key = segments$key
   ) %>% 
-  sp_title("MAU", font_size = 24) %>% 
+  sp_title("DAU", font_size = 24) %>% 
   sp_x_axis(rotation_axis_ticks = -30) 
 
 sp
 ```
 
 ## CO2 Data 
+
+The charts below show case time-series data with adjustments for tooltips and axis.
 
 ```{r}
 data("CO2")
@@ -507,40 +515,8 @@ sp(
   )
 ```
 
-```{r}
-data("quests")
-library(SveltePlots)
-sp <- sp(
-  data = quests, 
-  mapping = spaes(x = level, y = retention, group = AB),
-  type = "line", 
-  tooltip = F
-) %>%
-  sp_add_series(
-    data = quests, 
-    mapping = spaes(x = level, y = retention, group = AB),
-    type = "points", 
-    tooltip = T
-  ) %>% 
-  sp_x_axis(
-    rotation_axis_ticks = 90,
-    text_anchor = "middle",
-    dy = 7,
-    dx = 5
-  ) %>% 
-  sp_y_axis(format = '~%') %>% 
-  sp_add_segments(
-    x_start = "Quest 49", x_end = "Quest 12", 
-    y_start = "auto", y_end ="auto",
-    type = "rect", 
-    opacity = 0.2, 
-    background_color = "black", 
-    text_color = "white",
-    show_legend = TRUE, 
-    legend_text = "Quest 49 - Quest 12",
-    tooltip = "Quest 49 - Quest 12"
-  ) 
-```
+
+The chart below shows hourly data with a rotation of the x-axis tick labels.
 
 ```{r}
 # Generate hourly time series data for 7 days

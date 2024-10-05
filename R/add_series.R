@@ -34,7 +34,6 @@ add_bars <- function(sp, current_data, color_mapping, group_name, include_legend
   current_data <- current_data[, x := factor(x, levels = order_x)]
   current_data <- current_data[, group := factor(group, levels = order_group)]
   current_data <- data.table::setorder(current_data, x, group)
-  print(current_data)
 
   if(sp$x$list_input[[1]][["mode"]] == "stacked") {
     current_data <- current_data[, c("y", "y_start") := .(cumsum(y_og), data.table::shift(cumsum(y_og), fill = 0)), by = x]

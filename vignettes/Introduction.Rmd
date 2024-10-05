@@ -135,25 +135,21 @@ sp(
   )
 
 sp <- sp(
-  data = fruit[, c("year", "fruit", "value")] %>% 
-    dplyr::filter(fruit != "bananas"),
+  data = fruit[, c("year", "fruit", "value")],
   mapping = spaes(x = year, y = value, group = fruit),
   type = "bar",
-  mode = "stacked",
-  height = 500
-)  %>% 
-  sp_add_series(
-    data = fruit[, c("year", "fruit", "value")] %>% 
-      dplyr::filter(fruit == "bananas"),
-    mapping = spaes(x = year, y = value, group = fruit),
-    type = "bar",
+  mode = "stacked", height = 500
+) %>% 
+  sp_tooltip(
+    type = "vertical_line"
   )
+sp
 
 sp <- sp(
   data = fruit[, c("year", "fruit", "value")],
   mapping = spaes(x = year, y = value, group = fruit),
   type = "bar",
-  mode = "stacked", height = 500
+  mode = "percent", height = 500
 ) %>% 
   sp_tooltip(
     type = "vertical_line"
