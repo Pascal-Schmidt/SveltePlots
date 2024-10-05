@@ -78,9 +78,9 @@ sp(
 
 <!-- HTML content for pkgdown site -->
 <div>
-<iframe src="https://Pascal-Schmidt.github.io/SveltePlots/docs/penguins.html" width="800" height=600"></iframe>
+<iframe src="https://pascal-schmidt.github.io/SveltePlots/penguins.html" width="800" height=600"></iframe>
 </div>
 
 <!-- Fallback for GitHub front page -->
-👉 [View the penguins plot](https://Pascal-Schmidt.github.io/SveltePlots/penguins.html)
+👉 [View the penguins plot](https://pascal-schmidt.github.io/SveltePlots/penguins.html)
 
