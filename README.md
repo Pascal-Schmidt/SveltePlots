@@ -8,7 +8,7 @@
 
 <!-- HTML content for pkgdown site -->
 <div>
-<iframe src="https://Pascal-Schmidt.github.io/SveltePlots/examples.html" width="100%" height="1900"></iframe>
+<iframe src="examples.html" width="100%" height="1900"></iframe>
 </div>
 
 
@@ -78,7 +78,7 @@ sp(
 
 <!-- HTML content for pkgdown site -->
 <div>
-<iframe src="https://pascal-schmidt.github.io/SveltePlots/penguins.html" width="800" height=600"></iframe>
+<iframe src="penguins.html" width="800" height=600"></iframe>
 </div>
 
 <!-- Fallback for GitHub front page -->

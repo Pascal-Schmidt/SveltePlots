@@ -204,5 +204,6 @@ html_container <- tagList(
 library(htmltools)
 browsable(html_container)
 
+htmltools::save_html(html_container, file = here::here("docs/examples.html"))
 htmltools::save_html(sp_penguins, file = here::here("docs/penguins.html"))
 
