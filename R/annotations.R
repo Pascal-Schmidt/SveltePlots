@@ -38,58 +38,64 @@
 #'
 #' sp(
 #'   data = purchases_age, type = "line",
-#'   mapping = spaes(x = adjusted_timestamp, y = revenue_roll, group = age),
+#'   mapping = spaes(x = date, y = revenue_roll, group = age),
 #'   colors = c("red", "green", "blue"),
-#'   combine_same_groups = TRUE
+#'   combine_same_groups = TRUE,
+#'   height = 500
 #' ) |>
 #'   sp_add_series(
 #'     data = purchases_age,
-#'     mapping = spaes(x = adjusted_timestamp, y = revenue, group = age),
+#'     mapping = spaes(x = date, y = revenue, group = age),
 #'     type = "points",
 #'     alpha = 0.4,
-#'     tooltip = FALSE,
-#'     include_legend = FALSE
+#'     tooltip = F,
+#'     include_legend = F
 #'   ) |>
-#'     sp_add_series(
-#'     purchases_age[purchases_age$revenue == max(purchases_age$revenue), ],
-#'     mapping = spaes(x = adjusted_timestamp, y = revenue, group = age),
+#'   sp_add_series(
+#'     data = purchases_age[purchases_age$revenue == max(purchases_age$revenue), ],
+#'     mapping = spaes(x = date, y = revenue, group = age),
 #'     type = "points",
 #'     size = 5,
-#'     tooltip = FALSE
-#'     ) |>
+#'     tooltip = F
+#'   ) |>
 #'   sp_add_segments(
-#'     x_start = "2023-08-31",
-#'     x_end = "2023-09-05",
-#'     y_start = "auto",
-#'      y_end ="auto",
+#'     x_start = "2000-01-12", x_end = "2000-01-17",
+#'     y_start = "auto", y_end ="auto",
 #'     type = "rect",
 #'     opacity = 0.2,
 #'     background_color = "black",
 #'     text_color = "white",
 #'     show_legend = TRUE,
-#'     legend_text = "Labor Day Bundle",
-#'     tooltip = "Revenue: <strong>235</strong>"
+#'     legend_text = "Highest Revenue Day",
+#'     tooltip = "Revenue: <strong>$13179</strong>"
 #'   ) |>
 #'   sp_add_arrows(
-#'     x_start = c("2023-10-01", "2023-08-01"),
-#'     x_end = c("2023-09-05", "2023-08-31"),
-#'     y_start = c(1200, 1200),
-#'     y_end = c(1000, 1370),
+#'     x_start = c("2000-03-01", "2000-03-01"), x_end = c("2000-01-15", "2000-01-15"),
+#'     y_start = c(8000, 12000), y_end = c(10000, 13000),
 #'     arrow_head = c(0, 0),
 #'     size = c(200, 200),
-#'     curvature = c(0.2, 0.5),
+#'     curvature = c(0.2, 0.4),
 #'     direction = c("downward", "downward"),
 #'     color = c("black", "black"),
 #'     arrow_head_type = c("triangle", "triangle")
 #'   ) |>
 #'   sp_add_text(
-#'     x = c("2023-07-10", "2023-10-01"),
-#'     y = c(1300, 1220),
+#'     x = c("2000-02-01", "2000-02-20"),
+#'     y = c(12500, 8500),
 #'     text = c(
-#'       "This was the highest revenue day \n due to the labor day bundle",
-#'       "Labor Day Bundle Run Window"
+#'       "This was the highest revenue day",
+#'       "Window of Some Event Happening"
 #'     )
 #'   )
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
 #'
 #' sp <- sp(
 #'   data = dau,
@@ -99,7 +105,7 @@
 #' ) |>
 #'   sp_add_series(
 #'     data = dau,
-#'     mapping = spaes(x = date, y = DAU, group = Slot),
+#'     mapping = spaes(x = date, y = DAU),
 #'     type = "points",
 #'     size = 4,
 #'     tooltip = TRUE,
@@ -108,19 +114,19 @@
 #'     x_start = segments$start_date,
 #'     x_end = segments$end_date,
 #'     y_start = "even",
-#'      y_end = "even",
+#'     y_end = "even",
 #'     type = "rect",
 #'     opacity = 0.2,
 #'     background_color = segments$colors,
-#'      text_color = "white",
+#'     text_color = "white",
 #'     show_legend = TRUE,
 #'     legend_text = segments$event_type,
 #'     tooltip = unlist(segments$extra_details),
-#'     y_position = segments$y_end,
 #'     key = segments$key
 #'   ) |>
 #'   sp_title("DAU", font_size = 24) |>
 #'   sp_x_axis(rotation_axis_ticks = -30)
+#'
 #' sp
 
 #' @export
@@ -218,56 +224,52 @@ sp_add_segments <- function(
 #'
 #' sp(
 #'   data = purchases_age, type = "line",
-#'   mapping = spaes(x = adjusted_timestamp, y = revenue_roll, group = age),
+#'   mapping = spaes(x = date, y = revenue_roll, group = age),
 #'   colors = c("red", "green", "blue"),
 #'   combine_same_groups = TRUE
 #' ) |>
 #'   sp_add_series(
 #'     data = purchases_age,
-#'     mapping = spaes(x = adjusted_timestamp, y = revenue, group = age),
+#'     mapping = spaes(x = date, y = revenue, group = age),
 #'     type = "points",
 #'     alpha = 0.4,
-#'     tooltip = FALSE,
-#'     include_legend = FALSE
+#'     tooltip = F,
+#'     include_legend = F
 #'   ) |>
-#'     sp_add_series(
-#'     purchases_age[purchases_age$revenue == max(purchases_age$revenue), ],
-#'     mapping = spaes(x = adjusted_timestamp, y = revenue, group = age),
+#'   sp_add_series(
+#'     data = purchases_age[purchases_age$revenue == max(purchases_age$revenue), ],
+#'     mapping = spaes(x = date, y = revenue, group = age),
 #'     type = "points",
 #'     size = 5,
-#'     tooltip = FALSE
-#'     ) |>
+#'     tooltip = F
+#'   ) |>
 #'   sp_add_segments(
-#'     x_start = "2023-08-31",
-#'     x_end = "2023-09-05",
-#'     y_start = "auto",
-#'      y_end ="auto",
+#'     x_start = "2000-01-12", x_end = "2000-01-17",
+#'     y_start = "auto", y_end ="auto",
 #'     type = "rect",
 #'     opacity = 0.2,
 #'     background_color = "black",
 #'     text_color = "white",
 #'     show_legend = TRUE,
-#'     legend_text = "Labor Day Bundle",
-#'     tooltip = "Revenue: <strong>235</strong>"
+#'     legend_text = "Highest Revenue Day",
+#'     tooltip = "Revenue: <strong>$13179</strong>"
 #'   ) |>
 #'   sp_add_arrows(
-#'     x_start = c("2023-10-01", "2023-08-01"),
-#'     x_end = c("2023-09-05", "2023-08-31"),
-#'     y_start = c(1200, 1200),
-#'     y_end = c(1000, 1370),
+#'     x_start = c("2000-03-01", "2000-03-01"), x_end = c("2000-01-15", "2000-01-15"),
+#'     y_start = c(8000, 12000), y_end = c(10000, 13000),
 #'     arrow_head = c(0, 0),
 #'     size = c(200, 200),
-#'     curvature = c(0.2, 0.5),
+#'     curvature = c(0.2, 0.4),
 #'     direction = c("downward", "downward"),
 #'     color = c("black", "black"),
 #'     arrow_head_type = c("triangle", "triangle")
 #'   ) |>
 #'   sp_add_text(
-#'     x = c("2023-07-10", "2023-10-01"),
-#'     y = c(1300, 1220),
+#'     x = c("2000-02-01", "2000-02-20"),
+#'     y = c(12500, 8500),
 #'     text = c(
-#'       "This was the highest revenue day \n due to the labor day bundle",
-#'       "Labor Day Bundle Run Window"
+#'       "This was the highest revenue day",
+#'       "Window of Some Event Happening"
 #'     )
 #'   )
 #' @export
@@ -325,56 +327,52 @@ sp_add_text <- function(
 #'
 #' sp(
 #'   data = purchases_age, type = "line",
-#'   mapping = spaes(x = adjusted_timestamp, y = revenue_roll, group = age),
+#'   mapping = spaes(x = date, y = revenue_roll, group = age),
 #'   colors = c("red", "green", "blue"),
 #'   combine_same_groups = TRUE
 #' ) |>
 #'   sp_add_series(
 #'     data = purchases_age,
-#'     mapping = spaes(x = adjusted_timestamp, y = revenue, group = age),
+#'     mapping = spaes(x = date, y = revenue, group = age),
 #'     type = "points",
 #'     alpha = 0.4,
-#'     tooltip = FALSE,
-#'     include_legend = FALSE
+#'     tooltip = F,
+#'     include_legend = F
 #'   ) |>
-#'     sp_add_series(
-#'     purchases_age[purchases_age$revenue == max(purchases_age$revenue), ],
-#'     mapping = spaes(x = adjusted_timestamp, y = revenue, group = age),
+#'   sp_add_series(
+#'     data = purchases_age[purchases_age$revenue == max(purchases_age$revenue), ],
+#'     mapping = spaes(x = date, y = revenue, group = age),
 #'     type = "points",
 #'     size = 5,
-#'     tooltip = FALSE
-#'     ) |>
+#'     tooltip = F
+#'   ) |>
 #'   sp_add_segments(
-#'     x_start = "2023-08-31",
-#'     x_end = "2023-09-05",
-#'     y_start = "auto",
-#'      y_end ="auto",
+#'     x_start = "2000-01-12", x_end = "2000-01-17",
+#'     y_start = "auto", y_end ="auto",
 #'     type = "rect",
 #'     opacity = 0.2,
 #'     background_color = "black",
 #'     text_color = "white",
 #'     show_legend = TRUE,
-#'     legend_text = "Labor Day Bundle",
-#'     tooltip = "Revenue: <strong>235</strong>"
+#'     legend_text = "Highest Revenue Day",
+#'     tooltip = "Revenue: <strong>$13179</strong>"
 #'   ) |>
 #'   sp_add_arrows(
-#'     x_start = c("2023-10-01", "2023-08-01"),
-#'     x_end = c("2023-09-05", "2023-08-31"),
-#'     y_start = c(1200, 1200),
-#'     y_end = c(1000, 1370),
+#'     x_start = c("2000-03-01", "2000-03-01"), x_end = c("2000-01-15", "2000-01-15"),
+#'     y_start = c(8000, 12000), y_end = c(10000, 13000),
 #'     arrow_head = c(0, 0),
 #'     size = c(200, 200),
-#'     curvature = c(0.2, 0.5),
+#'     curvature = c(0.2, 0.4),
 #'     direction = c("downward", "downward"),
 #'     color = c("black", "black"),
 #'     arrow_head_type = c("triangle", "triangle")
 #'   ) |>
 #'   sp_add_text(
-#'     x = c("2023-07-10", "2023-10-01"),
-#'     y = c(1300, 1220),
+#'     x = c("2000-02-01", "2000-02-20"),
+#'     y = c(12500, 8500),
 #'     text = c(
-#'       "This was the highest revenue day \n due to the labor day bundle",
-#'       "Labor Day Bundle Run Window"
+#'       "This was the highest revenue day",
+#'       "Window of Some Event Happening"
 #'     )
 #'   )
 #' @export
