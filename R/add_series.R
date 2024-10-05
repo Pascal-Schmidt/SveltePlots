@@ -268,7 +268,7 @@ sp_add_series <- function(sp, data, mapping, type, alpha = 1, size = 2, colors =
   group_name <- sub("\\..*", "", names(current_data))
   facet <- if(is.null(facet_var)) {NULL} else { gsub("\\.", " ", sub("^[^.]*\\.", "", names(current_data)))}
 
-  if(type %in% c("points", "density", "scatter", "line")) {
+  if(type %in% c("points", "density", "scatter", "line", "bands")) {
     sp <- add_xy(sp, current_data, group_name, color_mapping, size, alpha, facet, tooltip, type, second_axis, include_legend)
   } else if(type == "bar") {
     sp <- add_bars(sp, current_data, color_mapping, group_name, include_legend)
