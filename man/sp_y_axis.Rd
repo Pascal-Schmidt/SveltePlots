@@ -19,7 +19,7 @@ sp_y_axis(
 \arguments{
 \item{sp}{A SveltePlot htmlwidget object.}
 
-\item{format}{Character string specifying the format of the x-axis labels. This should correspond to valid D3 format strings. Default is NULL.}
+\item{format}{Character string specifying the format of the x-axis labels. This should correspond to valid D3 format strings. Default is NULL. Documentation for the formats are here https://d3js.org/d3-format.}
 
 \item{scale}{Character string indicating the scale type of the axis. Can be either "linear" or "log" for logarithmic. Default is "linear".}
 

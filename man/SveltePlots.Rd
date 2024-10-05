@@ -7,7 +7,7 @@
 SveltePlots(list_input)
 }
 \arguments{
-\item{list_input}{This is a list inside a list or a list of lists which contain the chart speccifications used by Svelte to generate the chart.}
+\item{list_input}{This is a list inside a list or a list of lists which contain the chart specifications used by Svelte to generate the chart.}
 }
 \description{
 Chart Specification
