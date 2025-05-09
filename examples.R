@@ -11,13 +11,13 @@ sp_penguins <- sp(
 
 data("purchases")
 sp_purchases <- sp(
-  data = purchases_age, type = "line",
+  data = purchases, type = "line",
   mapping = spaes(x = date, y = revenue_roll, group = age),
   colors = c("red", "green", "blue"),
   combine_same_groups = TRUE, height = 350
 ) %>%
   sp_add_series(
-    data = purchases_age,
+    data = purchases,
     mapping = spaes(x = date, y = revenue, group = age),
     type = "points",
     alpha = 0.4,
@@ -25,7 +25,7 @@ sp_purchases <- sp(
     include_legend = F
   ) %>%
   sp_add_series(
-    data = purchases_age[purchases_age$revenue == max(purchases_age$revenue), ],
+    data = purchases[purchases$revenue == max(purchases$revenue), ],
     mapping = spaes(x = date, y = revenue, group = age),
     type = "points",
     size = 5,
