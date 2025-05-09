@@ -62,7 +62,6 @@ departments <- unique(walmart_sales_weekly$Dept)
 # UI
 ui <- fluidPage(
   titlePanel("Walmart Sales Dashboard"),
-  
   fluidRow(
     column(
       12,
@@ -74,7 +73,6 @@ ui <- fluidPage(
         end = max(walmart_sales_weekly$Date)
       )
     ),
-    
     column(
       12,
       # Multi-select input for departments with all selected by default
@@ -87,7 +85,6 @@ ui <- fluidPage(
       )
     )
   ),
-  
   fluidRow(
     column(
       12,
@@ -98,7 +95,6 @@ ui <- fluidPage(
 
 # Server logic
 server <- function(input, output) {
-
   filtered_data <- reactive({
     walmart_sales_weekly %>%
       filter(
@@ -113,7 +109,7 @@ server <- function(input, output) {
       data = filtered_data(),
       spaes(x = Date, y = Weekly_Sales, group = Dept),
       type = "line"
-    ) 
+    )
   )
 }
 
@@ -162,7 +158,6 @@ ui <- fluidPage(
         multiple = TRUE
       )
     ),
-
     fluidRow(
       column(
         12,
@@ -173,7 +168,6 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
-
   filtered_data <- reactive({
     gapminder %>%
       filter(
@@ -192,7 +186,6 @@ server <- function(input, output) {
       sp_title(custom_css = custom_css_titles) %>%
       sp_facet(scales = "free")
   )
-
 }
 
 shinyApp(ui = ui, server = server, options = list(host = "0.0.0.0", port = 3838))
@@ -223,32 +216,32 @@ density_chart <- sp(
   spaes(x = lifeExp, group = continent),
   "density",
   height = 500
-) %>% 
+) %>%
   sp_x_axis(
     rotation_axis_ticks = 90,
     text_anchor = "end"
   )
 
 scatter_plot <- sp(
-  data = gapminder %>% 
+  data = gapminder %>%
     dplyr::filter(year == "2007"),
   spaes(x = gdpPercap, y = lifeExp, group = continent),
   "points",
   height = 500
-) %>% 
+) %>%
   sp_x_axis(
     rotation_axis_ticks = 90,
     text_anchor = "end"
   )
 
 bar_chart <- sp(
-  data = gapminder %>% 
-    dplyr::filter(year == "2007") %>% 
+  data = gapminder %>%
+    dplyr::filter(year == "2007") %>%
     dplyr::count(continent),
   spaes(x = continent, y = n),
   "bar",
   height = 500
-) %>% 
+) %>%
   sp_x_axis(
     rotation_axis_ticks = 90,
     text_anchor = "end"
@@ -268,19 +261,18 @@ scatter_plot$x$list_input[[1]]$id <- "scatter"
 bar_chart$x$list_input[[1]]$id <- "bar"
 
 chart_specs <- list(
-  "density" = density_chart$x$list_input[[1]], 
-  "scatter" = scatter_plot$x$list_input[[1]], 
+  "density" = density_chart$x$list_input[[1]],
+  "scatter" = scatter_plot$x$list_input[[1]],
   "bar" = bar_chart$x$list_input[[1]]
 )
 
 SveltePlots <- function(list_input) {
-
   # forward options using x
   x <- list(
     list_input = list_input
   )
 
-  attr(x, 'TOJSON_ARGS') <- list(dataframe = "rows")
+  attr(x, "TOJSON_ARGS") <- list(dataframe = "rows")
 
   # create widget
   sp <- htmlwidgets::createWidget(
@@ -296,7 +288,6 @@ SveltePlots <- function(list_input) {
   )
 
   return(sp)
-
 }
 
 SveltePlots(unname(chart_specs))
@@ -315,7 +306,7 @@ density_chart <- sp(
   data = gapminder,
   spaes(x = lifeExp, group = continent),
   "density"
-) %>% 
+) %>%
   sp_x_axis(
     rotation_axis_ticks = 90,
     text_anchor = "end"
@@ -326,7 +317,7 @@ scatter_plot <- sp(
     dplyr::filter(year == "2007"),
   spaes(x = gdpPercap, y = lifeExp, group = continent),
   "points"
-) %>% 
+) %>%
   sp_x_axis(
     rotation_axis_ticks = 90,
     text_anchor = "end"
@@ -338,7 +329,7 @@ bar_chart <- sp(
     dplyr::count(continent),
   spaes(x = continent, y = n),
   "bar"
-) %>% 
+) %>%
   sp_x_axis(
     rotation_axis_ticks = 90,
     text_anchor = "end"
@@ -364,13 +355,12 @@ chart_specs <- list(
 )
 
 SveltePlots <- function(list_input) {
-
   # forward options using x
   x <- list(
     list_input = list_input
   )
 
-  attr(x, 'TOJSON_ARGS') <- list(dataframe = "rows")
+  attr(x, "TOJSON_ARGS") <- list(dataframe = "rows")
 
   # create widget
   sp <- htmlwidgets::createWidget(
@@ -386,43 +376,39 @@ SveltePlots <- function(list_input) {
   )
 
   return(sp)
-
 }
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
-    # Application title
-    titlePanel("RenderUI Example With Multiple Charts"),
-
-    fluidRow(
-      column(
-        12,
-        selectInput(
-          inputId = "plot_type",
-          label = "Choose plot type:",
-          choices = c(
-            "Density" = "density",
-            "Scatter" = "scatter",
-            "Bar" = "bar"
-          ),
-          selected = c("density", "scatter", "bar"),
-          multiple = TRUE
-        )
-      )
-    ),
-
-    fluidRow(
-      column(
-        12,
-        SveltePlotsOutput("gapminder_data")
+  # Application title
+  titlePanel("RenderUI Example With Multiple Charts"),
+  fluidRow(
+    column(
+      12,
+      selectInput(
+        inputId = "plot_type",
+        label = "Choose plot type:",
+        choices = c(
+          "Density" = "density",
+          "Scatter" = "scatter",
+          "Bar" = "bar"
+        ),
+        selected = c("density", "scatter", "bar"),
+        multiple = TRUE
       )
     )
+  ),
+  fluidRow(
+    column(
+      12,
+      SveltePlotsOutput("gapminder_data")
+    )
+  )
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-
   filtered_data <- reactive({
     chart_specs2 <- chart_specs[names(chart_specs) %in% input$plot_type]
     length_chart_specs2 <- length(chart_specs2)
@@ -440,7 +426,6 @@ server <- function(input, output) {
 
 # Run the application
 shinyApp(ui = ui, server = server, options = list(host = "0.0.0.0", port = 3838))
-
 ```
 
 </details>

@@ -28,5 +28,3 @@ test_that("Number of facets when a vector of columns is specified is equal to nu
     SveltePlots::sp_facet()
   expect_equal(dplyr::distinct(penguins, sex, species) %>% nrow(), sp$x$list_input %>% length())
 })
-
-

@@ -66,21 +66,19 @@ sp_x_axis <- function(
     sp, title = NULL, format = NULL, scale = "linear", ticks = 6, label = NULL,
     font_size_label = 14, font_size_ticks = 12, rotation_axis_ticks = 0,
     show_bar_labels = FALSE, position = "top", color_ticks = "black", color_label = "black",
-    dx = 0, dy = 0, text_anchor = NULL, dominant_baseline = NULL, trigger = NULL, linetype = "solid"
-) {
-
-  if(!is.null(format)) {
+    dx = 0, dy = 0, text_anchor = NULL, dominant_baseline = NULL, trigger = NULL, linetype = "solid") {
+  if (!is.null(format)) {
     sp$x$list_input[[1]][["format_xaxis"]] <- format
   }
-  if(!is.null(label)) {
+  if (!is.null(label)) {
     sp$x$list_input[[1]][["x_label"]] <- label
   }
 
-  if(is.null(text_anchor)) {
-    if(rotation_axis_ticks == 0) {
+  if (is.null(text_anchor)) {
+    if (rotation_axis_ticks == 0) {
       sp$x$list_input[[1]][["text_anchor_x_axis"]] <- "middle"
       sp$x$list_input[[1]][["dominant_baseline_x_axis"]] <- "middle"
-    } else if(rotation_axis_ticks > 0) {
+    } else if (rotation_axis_ticks > 0) {
       sp$x$list_input[[1]][["text_anchor_x_axis"]] <- "end"
       sp$x$list_input[[1]][["dominant_baseline_x_axis"]] <- "end"
     } else {
@@ -92,16 +90,16 @@ sp_x_axis <- function(
     sp$x$list_input[[1]][["dominant_baseline_x_axis"]] <- dominant_baseline
   }
 
-  if(!is.null(trigger)) {
-    if(trigger == "axis") {
+  if (!is.null(trigger)) {
+    if (trigger == "axis") {
       sp$x$list_input[[1]][["tooltip"]] <- "vertical_line"
       sp$x$list_input[[1]][["line_type_axis_trigger"]] <- linetype_to_svg(linetype)
-    } else if(trigger == "single") {
+    } else if (trigger == "single") {
       sp$x$list_input[[1]][["tooltip"]] <- "single"
     }
   }
 
-  if(!is.null(title)) {
+  if (!is.null(title)) {
     sp$x$list_input[[1]][["x_label"]] <- title
     sp$x$list_input[[1]][["font_size_xaxis"]] <- font_size_label
   } else {
@@ -140,14 +138,12 @@ sp_x_axis <- function(
 #' @export
 sp_y_axis <- function(
     sp, format = NULL, scale = "linear", ticks = 6, label = NULL,
-    font_size_label = 14, font_size_ticks = 12, color_ticks = "black", color_label = "black"
-) {
-
-  if(!is.null(format)) {
+    font_size_label = 14, font_size_ticks = 12, color_ticks = "black", color_label = "black") {
+  if (!is.null(format)) {
     sp$x$list_input[[1]][["format_yaxis"]] <- format
   }
 
-  if(!is.null(label)) {
+  if (!is.null(label)) {
     sp$x$list_input[[1]][["y_label"]] <- label
   }
 
@@ -159,5 +155,4 @@ sp_y_axis <- function(
   sp$x$list_input[[1]][["color_label_y"]] <- color_label
 
   return(sp)
-
 }
