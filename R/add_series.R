@@ -11,10 +11,9 @@
 #' @return Configuration list with modified data for the bar chart.
 #' @keywords internal
 add_bars <- function(sp, current_data, color_mapping, group_name, include_legend) {
-
   order_x <- unique(
     c(as.character(sp$x$list_input[[1]][["data"]][["x"]]), as.character(dplyr::bind_rows(current_data)[["x"]]))
-    )
+  )
 
   order_group <- unique(
     c(as.character(sp$x$list_input[[1]][["data"]][["group"]]), as.character(dplyr::bind_rows(current_data)[["group"]]))
@@ -27,28 +26,29 @@ add_bars <- function(sp, current_data, color_mapping, group_name, include_legend
 
   current_data <- dplyr::bind_rows(current_data)
   current_data <- current_data[, y := as.numeric(y)]
-  current_data <- current_data[, y_og := as.numeric(y)]
+  data.table::setDT(current_data)
+  data.table::set(current_data, j = "y_og", value = as.numeric(current_data[["y"]]))
   current_data <- current_data[, .(y = sum(y)), by = c("x", "group", "colors", "include_legend", "y_og")]
   current_data <- current_data[, id := paste0(x, group)]
-  current_data <- dplyr::bind_rows(sp$x$list_input[[1]][["data"]], current_data)
   current_data <- current_data[, x := factor(x, levels = order_x)]
   current_data <- current_data[, group := factor(group, levels = order_group)]
   current_data <- data.table::setorder(current_data, x, group)
 
-  if(sp$x$list_input[[1]][["mode"]] == "stacked") {
+  if (sp$x$list_input[[1]][["mode"]] == "stacked") {
     current_data <- current_data[, c("y", "y_start") := .(cumsum(y_og), data.table::shift(cumsum(y_og), fill = 0)), by = x]
-  } else if(sp$x$list_input[[1]][["mode"]] == "percent") {
-    current_data <- current_data[, y := y/sum(y), by = "x"]
+  } else if (sp$x$list_input[[1]][["mode"]] == "percent") {
+    current_data <- current_data[, y := y / sum(y), by = "x"]
     current_data <- current_data[, c("y", "y_start") := .(cumsum(y_og), data.table::shift(cumsum(y_og), fill = 0)), by = x]
   } else {
     current_data <- current_data[, y_start := ifelse(y > 0, 0, y)]
     current_data <- current_data[, y := ifelse(y < 0, 0, y)]
   }
 
+  current_data <- dplyr::bind_rows(sp$x$list_input[[1]][["data"]], current_data)
+  current_data <- data.table::setorder(current_data, x, group)
   sp$x$list_input[[1]][["data"]] <- current_data
 
   return(sp)
-
 }
 
 #' Add XY Data to Chart
@@ -71,7 +71,6 @@ add_bars <- function(sp, current_data, color_mapping, group_name, include_legend
 #' @return Modified SveltePlot object with updated XY data.
 #' @keywords internal
 add_xy <- function(sp, current_data, group_name, color_mapping, size, alpha, facet, tooltip, type, second_axis, include_legend) {
-
   json_df <- dplyr::tibble()
   for (i in seq_along(current_data)) {
     json_df <- json_df %>%
@@ -89,7 +88,13 @@ add_xy <- function(sp, current_data, group_name, color_mapping, size, alpha, fac
           fill = ifelse(type == "line" | type == "points", "none", unname(color_mapping[names(color_mapping) == group_name[i]])),
           data = current_data[[i]] %>%
             dplyr::mutate(
-              x = if(inherits(current_data[[i]][["x"]], c("Date", "POSIXct", "POSIXt"))) {format(x, sp$x$list_input[[1]][["time_interval"]])} else if(inherits(current_data[[i]][["x"]], c("character", "factor"))) {as.character(x)} else {as.numeric(x)}
+              x = if (inherits(current_data[[i]][["x"]], c("Date", "POSIXct", "POSIXt"))) {
+                format(x, sp$x$list_input[[1]][["time_interval"]])
+              } else if (inherits(current_data[[i]][["x"]], c("character", "factor"))) {
+                as.character(x)
+              } else {
+                as.numeric(x)
+              }
             ) %>%
             list()
         ) %>%
@@ -97,9 +102,9 @@ add_xy <- function(sp, current_data, group_name, color_mapping, size, alpha, fac
       )
   }
 
-  if(sp$x$list_input[[1]][["combine_same_groups"]]) {
+  if (sp$x$list_input[[1]][["combine_same_groups"]]) {
     data <- rbind(sp$x$list_input[[1]][["data"]], json_df)
-    if("facet_var" %in% colnames(data)) {
+    if ("facet_var" %in% colnames(data)) {
       data <- data %>%
         dplyr::group_by(id, facet_var)
     } else {
@@ -118,7 +123,6 @@ add_xy <- function(sp, current_data, group_name, color_mapping, size, alpha, fac
   sp$x$list_input[[1]][["data"]] <- data
 
   return(sp)
-
 }
 
 #' Add Series to a SveltePlot Chart
@@ -158,18 +162,18 @@ add_xy <- function(sp, current_data, group_name, color_mapping, size, alpha, fac
 #'   mapping = spaes(x = date, y = unemploy),
 #'   colors = "red"
 #' ) %>%
-#'  sp_add_series(
-#'   data = economics,
-#'   mapping = spaes(x = date, y = pce),
-#'   type = "line",
-#'   colors = "green"
-#'  ) %>%
-#'  sp_add_series(
-#'   data = economics,
-#'   mapping = spaes(x = date, y = psavert),
-#'   type = "line",
-#'   colors = "blue"
-#' )
+#'   sp_add_series(
+#'     data = economics,
+#'     mapping = spaes(x = date, y = pce),
+#'     type = "line",
+#'     colors = "green"
+#'   ) %>%
+#'   sp_add_series(
+#'     data = economics,
+#'     mapping = spaes(x = date, y = psavert),
+#'     type = "line",
+#'     colors = "blue"
+#'   )
 #'
 #' data("gapminder")
 #'
@@ -214,29 +218,28 @@ add_xy <- function(sp, current_data, group_name, color_mapping, size, alpha, fac
 #'   )
 #'
 #' sp(
-#'   data = purchases_age,
-#'   mapping = spaes(x = adjusted_timestamp, y = revenue_roll, group = age),
+#'   data = purchases,
+#'   mapping = spaes(x = date, y = revenue_roll, group = age),
 #'   type = "line",
 #'   colors = c("red", "green", "blue"),
 #'   combine_same_groups = FALSE
 #' ) %>%
 #'   sp_add_series(
-#'     data = purchases_age,
-#'     mapping = spaes(x = adjusted_timestamp, y = revenue, group = age),
+#'     data = purchases,
+#'     mapping = spaes(x = date, y = revenue, group = age),
 #'     type = "points",
 #'     alpha = 0.4,
 #'     tooltip = FALSE,
 #'   ) %>%
 #'   sp_add_series(
-#'     data = purchases_age[purchases_age$revenue == max(purchases_age$revenue), ],
-#'     mapping = spaes(x = adjusted_timestamp, y = revenue, group = age),
+#'     data = purchases[purchases$revenue == max(purchases$revenue), ],
+#'     mapping = spaes(x = date, y = revenue, group = age),
 #'     type = "points",
 #'     size = 5,
-#'      tooltip = FALSE
+#'     tooltip = FALSE
 #'   )
 #' @export
 sp_add_series <- function(sp, data, mapping, type, alpha = 1, size = 2, colors = NULL, tooltip = TRUE, include_legend = TRUE, second_axis = FALSE) {
-
   stopifnot("No data frame supplied" = is.data.frame(data), inherits(mapping, "spaes"))
 
   facet_var <- sp$x$list_input[[1]][["facet_var"]]
@@ -246,14 +249,14 @@ sp_add_series <- function(sp, data, mapping, type, alpha = 1, size = 2, colors =
   current_data <- data %>% dplyr::select(!!!names_list, dplyr::any_of("custom_tooltip"), facet_var)
 
   # if there is no grouping column yet
-  if(!rlang::has_name(current_data, "group")) {
+  if (!rlang::has_name(current_data, "group")) {
     current_data[["group"]] <- names_list$y
   }
 
   current_data <- data.table::as.data.table(current_data)
-  if(is.factor(current_data[["group"]])) {
+  if (is.factor(current_data[["group"]])) {
     current_data <- data.table::setorder(current_data, group)
-  } else if(!is.factor(current_data[["group"]])) {
+  } else if (!is.factor(current_data[["group"]])) {
     current_data <- current_data[, group := factor(group)]
     current_data <- data.table::setorder(current_data, group)
   }
@@ -265,14 +268,17 @@ sp_add_series <- function(sp, data, mapping, type, alpha = 1, size = 2, colors =
   current_data <- split(current_data, by = c("group", facet_var))
   current_data <- Filter(function(df) nrow(df) > 0, current_data)
   group_name <- sub("\\..*", "", names(current_data))
-  facet <- if(is.null(facet_var)) {NULL} else { gsub("\\.", " ", sub("^[^.]*\\.", "", names(current_data)))}
+  facet <- if (is.null(facet_var)) {
+    NULL
+  } else {
+    gsub("\\.", " ", sub("^[^.]*\\.", "", names(current_data)))
+  }
 
-  if(type %in% c("points", "density", "scatter", "line", "bands")) {
+  if (type %in% c("points", "density", "scatter", "line", "bands")) {
     sp <- add_xy(sp, current_data, group_name, color_mapping, size, alpha, facet, tooltip, type, second_axis, include_legend)
-  } else if(type == "bar") {
+  } else if (type == "bar") {
     sp <- add_bars(sp, current_data, color_mapping, group_name, include_legend)
   }
 
   return(sp)
-
 }
