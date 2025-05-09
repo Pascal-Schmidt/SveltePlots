@@ -37,30 +37,30 @@
 #' data("purchases")
 #'
 #' sp(
-#'   data = purchases_age, type = "line",
+#'   data = purchases, type = "line",
 #'   mapping = spaes(x = date, y = revenue_roll, group = age),
 #'   colors = c("red", "green", "blue"),
 #'   combine_same_groups = TRUE,
 #'   height = 500
 #' ) |>
 #'   sp_add_series(
-#'     data = purchases_age,
+#'     data = purchases,
 #'     mapping = spaes(x = date, y = revenue, group = age),
 #'     type = "points",
 #'     alpha = 0.4,
-#'     tooltip = F,
-#'     include_legend = F
+#'     tooltip = FALSE,
+#'     include_legend = FALSE
 #'   ) |>
 #'   sp_add_series(
-#'     data = purchases_age[purchases_age$revenue == max(purchases_age$revenue), ],
+#'     data = purchases[purchases$revenue == max(purchases$revenue), ],
 #'     mapping = spaes(x = date, y = revenue, group = age),
 #'     type = "points",
 #'     size = 5,
-#'     tooltip = F
+#'     tooltip = FALSE
 #'   ) |>
 #'   sp_add_segments(
 #'     x_start = "2000-01-12", x_end = "2000-01-17",
-#'     y_start = "auto", y_end ="auto",
+#'     y_start = "auto", y_end = "auto",
 #'     type = "rect",
 #'     opacity = 0.2,
 #'     background_color = "black",
@@ -135,43 +135,41 @@ sp_add_segments <- function(
     linetype = "solid", line_width = 1, opacity = 0.2,
     show_legend = TRUE, background_color = NULL, legend_text = " ",
     tooltip = "", font_size = 12, text_color = "black",
-    x_position = NULL, y_position = NULL, outline_width = 1, outline_color = "black", key = NULL
-) {
-
+    x_position = NULL, y_position = NULL, outline_width = 1, outline_color = "black", key = NULL) {
   sp$x$list_input[[1]]$segments <- TRUE
   sp$x$list_input[[1]]$show_legend_segments <- show_legend
-  if(is.null(background_color)) {
+  if (is.null(background_color)) {
     n <- length(x_start)
-    if(n == 1) {
+    if (n == 1) {
       background_color <- "grey"
     } else {
       insert_colors <- RColorBrewer::brewer.pal(n = min(n, 12), name = "Set3")
-      if(n == 2) {
+      if (n == 2) {
         background_color <- insert_colors[1:2]
-      } else if(n > 12) {
-        n1 <- floor(n/12)
+      } else if (n > 12) {
+        n1 <- floor(n / 12)
         n2 <- n %% 12
         background_color <- c(rep(insert_colors, n1), insert_colors[1:n2])
       }
     }
   }
 
-  if(inherits(x_start, "Date")) {
+  if (inherits(x_start, "Date")) {
     x_start <- as.character(x_start)
     x_end <- as.character(x_end)
   }
 
-  if(is.null(sp$x$list_input[[1]]$add_segments_df)) {
+  if (is.null(sp$x$list_input[[1]]$add_segments_df)) {
     temp <- NULL
   } else {
     temp <- sp$x$list_input[[1]]$add_segments_df
   }
 
-  if(is.null(x_position)) {
+  if (is.null(x_position)) {
     x_position <- x_start
   }
 
-  if(is.null(key)) {
+  if (is.null(key)) {
     key <- 1:length(x_start)
   }
 
@@ -200,7 +198,6 @@ sp_add_segments <- function(
     )
 
   return(sp)
-
 }
 
 #' Add Text Annotations to a SveltePlot Chart
@@ -223,29 +220,29 @@ sp_add_segments <- function(
 #' data("purchases")
 #'
 #' sp(
-#'   data = purchases_age, type = "line",
+#'   data = purchases, type = "line",
 #'   mapping = spaes(x = date, y = revenue_roll, group = age),
 #'   colors = c("red", "green", "blue"),
 #'   combine_same_groups = TRUE
 #' ) |>
 #'   sp_add_series(
-#'     data = purchases_age,
+#'     data = purchases,
 #'     mapping = spaes(x = date, y = revenue, group = age),
 #'     type = "points",
 #'     alpha = 0.4,
-#'     tooltip = F,
-#'     include_legend = F
+#'     tooltip = FALSE,
+#'     include_legend = FALSE
 #'   ) |>
 #'   sp_add_series(
-#'     data = purchases_age[purchases_age$revenue == max(purchases_age$revenue), ],
+#'     data = purchases[purchases$revenue == max(purchases$revenue), ],
 #'     mapping = spaes(x = date, y = revenue, group = age),
 #'     type = "points",
 #'     size = 5,
-#'     tooltip = F
+#'     tooltip = FALSE
 #'   ) |>
 #'   sp_add_segments(
 #'     x_start = "2000-01-12", x_end = "2000-01-17",
-#'     y_start = "auto", y_end ="auto",
+#'     y_start = "auto", y_end = "auto",
 #'     type = "rect",
 #'     opacity = 0.2,
 #'     background_color = "black",
@@ -275,12 +272,10 @@ sp_add_segments <- function(
 #' @export
 sp_add_text <- function(
     sp, x, y, text, color = "black",
-    font_size = 12, text_anchor = NULL, style = NULL
-) {
-
+    font_size = 12, text_anchor = NULL, style = NULL) {
   sp$x$list_input[[1]]$annotations <- TRUE
 
-  if(is.null(sp$x$list_input[[1]]$add_annotations_df)) {
+  if (is.null(sp$x$list_input[[1]]$add_annotations_df)) {
     temp <- NULL
   } else {
     temp <- sp$x$list_input[[1]]$add_annotations_df
@@ -299,7 +294,6 @@ sp_add_text <- function(
     )
 
   return(sp)
-
 }
 
 #' Add Arrows to a SveltePlot Chart
@@ -326,29 +320,29 @@ sp_add_text <- function(
 #' data("purchases")
 #'
 #' sp(
-#'   data = purchases_age, type = "line",
+#'   data = purchases, type = "line",
 #'   mapping = spaes(x = date, y = revenue_roll, group = age),
 #'   colors = c("red", "green", "blue"),
 #'   combine_same_groups = TRUE
 #' ) |>
 #'   sp_add_series(
-#'     data = purchases_age,
+#'     data = purchases,
 #'     mapping = spaes(x = date, y = revenue, group = age),
 #'     type = "points",
 #'     alpha = 0.4,
-#'     tooltip = F,
-#'     include_legend = F
+#'     tooltip = FALSE,
+#'     include_legend = FALSE
 #'   ) |>
 #'   sp_add_series(
-#'     data = purchases_age[purchases_age$revenue == max(purchases_age$revenue), ],
+#'     data = purchases[purchases$revenue == max(purchases$revenue), ],
 #'     mapping = spaes(x = date, y = revenue, group = age),
 #'     type = "points",
 #'     size = 5,
-#'     tooltip = F
+#'     tooltip = FALSE
 #'   ) |>
 #'   sp_add_segments(
 #'     x_start = "2000-01-12", x_end = "2000-01-17",
-#'     y_start = "auto", y_end ="auto",
+#'     y_start = "auto", y_end = "auto",
 #'     type = "rect",
 #'     opacity = 0.2,
 #'     background_color = "black",
@@ -378,12 +372,10 @@ sp_add_text <- function(
 #' @export
 sp_add_arrows <- function(
     sp, x_start, x_end, y_start, y_end, arrow_head_type = NULL,
-    size = NULL, color = "black", curvature = 0.00001, direction = "upward", arrow_head = NULL
-) {
-
+    size = NULL, color = "black", curvature = 0.00001, direction = "upward", arrow_head = NULL) {
   sp$x$list_input[[1]]$arrows <- TRUE
 
-  if(is.null(sp$x$list_input[[1]]$add_arrows_df)) {
+  if (is.null(sp$x$list_input[[1]]$add_arrows_df)) {
     temp <- NULL
   } else {
     temp <- sp$x$list_input[[1]]$add_arrows_df

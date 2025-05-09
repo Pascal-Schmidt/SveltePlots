@@ -34,55 +34,55 @@ In the chart below, we added 3 additional series for the the countries Chile and
 ```{r}
 data("gapminder")
 
-gapminder <- gapminder |> 
+gapminder <- gapminder |>
   dplyr::mutate(
     country = as.character(country),
     year = lubridate::ymd(paste0(year, "-01-01"))
   )
 
 sp <- SveltePlots::sp(
-  data = gapminder |> 
-    dplyr::group_by(year, continent) |> 
+  data = gapminder |>
+    dplyr::group_by(year, continent) |>
     dplyr::summarise(
       lifeExp = mean(lifeExp)
-    ) |> 
+    ) |>
     dplyr::ungroup(),
   mapping = spaes(x = year, y = lifeExp, group = continent),
   type = "line",
   combine_same_groups = FALSE
-) |> 
+) |>
   sp_add_series(
-    data = gapminder |> 
+    data = gapminder |>
       dplyr::filter(country == "Germany"),
     mapping = spaes(x = year, y = lifeExp, group = country),
-    type = "line", 
+    type = "line",
     colors = "gold"
-  ) |> 
+  ) |>
   sp_add_series(
-    gapminder |> 
-      dplyr::filter(country == "Chile"),
-    mapping = spaes(x = year, y = lifeExp, group = country), 
-    type = "line", 
-    colors = "silver"
-  ) |> 
-  sp_add_series(
-    gapminder |> 
+    gapminder |>
       dplyr::filter(country == "Chile"),
     mapping = spaes(x = year, y = lifeExp, group = country),
-    type = "points", 
-    size = 3, 
+    type = "line",
+    colors = "silver"
+  ) |>
+  sp_add_series(
+    gapminder |>
+      dplyr::filter(country == "Chile"),
+    mapping = spaes(x = year, y = lifeExp, group = country),
+    type = "points",
+    size = 3,
     tooltip = FALSE
-  ) 
+  )
 ```
 
 We can add a title with `sp_title()`
 
 ```{r}
-sp |> 
- sp_title(
-   title = "Life Expectancy Over Time",
-   font_size = 26
- ) 
+sp |>
+  sp_title(
+    title = "Life Expectancy Over Time",
+    font_size = 26
+  )
 ```
 
 For the above graph we added a points series and a line series for Chile and both series show up in the legend because of `combine_same_groups = FALSE` in the `sp` function. We do not show the tooltip for the points series for Chile. 
@@ -93,25 +93,25 @@ By clicking the legend, we can add and remove series. Sometimes, it is nice to c
 
 ```{r}
 sp(
-  data = purchases_age, 
+  data = purchases,
   type = "line",
   mapping = spaes(x = date, y = revenue_roll, group = age),
   colors = c("red", "green", "blue"),
   combine_same_groups = TRUE
 ) |>
   sp_add_series(
-    data = purchases_age,
-    mapping = spaes(x = date, y = revenue, group = age),
-    type = "points", 
-    alpha = 0.4
-  ) |> 
-  sp_add_series(
-    data = purchases_age[purchases_age$revenue == max(purchases_age$revenue), ], 
+    data = purchases,
     mapping = spaes(x = date, y = revenue, group = age),
     type = "points",
-    size = 5, 
+    alpha = 0.4
+  ) |>
+  sp_add_series(
+    data = purchases[purchases$revenue == max(purchases$revenue), ],
+    mapping = spaes(x = date, y = revenue, group = age),
+    type = "points",
+    size = 5,
     tooltip = F
-  ) 
+  )
 ```
 
 The line and points, which are two different series, are controlled by one legend entry.   
@@ -120,27 +120,27 @@ Similarly, we can also control each series we are plotting with the legend by sp
 
 ```{r}
 sp <- sp(
-  data = purchases_age, 
+  data = purchases,
   mapping = spaes(x = date, y = revenue_roll, group = age),
   type = "line",
   colors = c("red", "green", "blue"),
   combine_same_groups = FALSE
 ) |>
   sp_add_series(
-    data = purchases_age, 
+    data = purchases,
     mapping = spaes(x = date, y = revenue, group = age),
     type = "points",
     alpha = 0.4,
-    tooltip = F, 
-  ) |> 
+    tooltip = F,
+  ) |>
   sp_add_series(
-    data = purchases_age[purchases_age$revenue == max(purchases_age$revenue), ], 
+    data = purchases[purchases$revenue == max(purchases$revenue), ],
     mapping = spaes(x = date, y = revenue, group = age),
-    type = "points", 
+    type = "points",
     size = 5,
-    tooltip = F, 
+    tooltip = F,
     include_legend = F
-  ) 
+  )
 
 sp
 ```
@@ -152,20 +152,20 @@ Below is another example with the mtcars data set where we would like to highlig
 ```{r}
 data("mtcars")
 sp <- sp(
-  mtcars |> dplyr::filter(mpg < 28), 
+  mtcars |> dplyr::filter(mpg < 28),
   mapping = spaes(x = mpg, y = wt),
-  type = "points", 
+  type = "points",
   colors = "black",
   combine_same_groups = FALSE
 ) |>
   sp_add_series(
     data = mtcars |>
       dplyr::filter(mpg >= 28),
-    mapping = spaes(x = mpg, y = wt), 
-    type = "points", 
+    mapping = spaes(x = mpg, y = wt),
+    type = "points",
     size = 5,
     colors = "red"
-  ) 
+  )
 
 sp
 ```
@@ -176,41 +176,41 @@ We can combine lines when we are not having any `NA` values in the data set.
 
 ```{r}
 set.seed(123)
-purchases_age_line_breaks <- purchases_age[sample(1:nrow(purchases_age), size = nrow(purchases_age)*0.7), ]
+purchases_line_breaks <- purchases[sample(1:nrow(purchases), size = nrow(purchases) * 0.7), ]
 
 sp <- sp(
-  data = purchases_age_line_breaks,
+  data = purchases_line_breaks,
   mapping = spaes(x = date, y = revenue_roll, group = age),
   type = "line",
   colors = c("red", "green", "blue")
-) |> 
+) |>
   sp_add_series(
-    data = purchases_age_line_breaks, 
+    data = purchases_line_breaks,
     mapping = spaes(x = date, y = revenue_roll, group = age),
-    type = "points", 
+    type = "points",
     tooltip = F
-  ) 
+  )
 sp
 ```
 
 Similarly, we can break lines when having NA values in the data set for the y-values. Notice, when there are no two consecutive dates, there will not be a line and therefore, we added a points series as well.
 
 ```{r}
-purchases_age_line_breaks <- purchases_age
-purchases_age_line_breaks$revenue_roll[sample(1:nrow(purchases_age), size = nrow(purchases_age)*0.2)] <- NA
+purchases_line_breaks <- purchases
+purchases_line_breaks$revenue_roll[sample(1:nrow(purchases), size = nrow(purchases) * 0.2)] <- NA
 
 sp <- sp(
-  data = purchases_age_line_breaks,
+  data = purchases_line_breaks,
   mapping = spaes(x = date, y = revenue_roll, group = age),
   type = "line",
   colors = c("red", "green", "blue")
-) |>   
+) |>
   sp_add_series(
-    data = purchases_age_line_breaks, 
+    data = purchases_line_breaks,
     mapping = spaes(x = date, y = revenue_roll, group = age),
     type = "points",
     tooltip = F
-  ) 
+  )
 
 sp
 ```
@@ -223,18 +223,18 @@ We can specify confidence intervals or bands with the `y_min` and `y_max` argume
 data("confidence_intervals")
 
 sp(
-  data = confidence_intervals, 
+  data = confidence_intervals,
   mapping = spaes(x = .index, y = .value, group = .key),
   type = "line",
   size = 2
-) |> 
+) |>
   sp_add_series(
-    data = confidence_intervals |> 
+    data = confidence_intervals |>
       dplyr::mutate(.key = as.character(.key)) |>
       na.omit(),
     mapping = spaes(x = .index, y_min = .conf_lo, y_max = .conf_hi, group = .key),
     type = "bands"
-  ) 
+  )
 ```
 
 ## Facetting
@@ -248,16 +248,16 @@ sp <- sp(
   mapping = spaes(x = flipper_length_mm, y = bill_length_mm, group = species),
   type = "points",
   facet_var = "sex"
-) |> 
-  SveltePlots::sp_facet(ncol = 2, scales = "free") 
+) |>
+  SveltePlots::sp_facet(ncol = 2, scales = "free")
 sp
 ```
 
 The levels or groups in the columns will be the facet titles of the charts. We can customize them with some custom css for the header. Again, make sure that the `sp_facet()` function is the last function in the chain. 
 
 ```{r fig.height=12}
-custom_css_titles <- "background-color: grey; color: white;          
-                      text-align: center; padding: 10px;         
+custom_css_titles <- "background-color: grey; color: white;
+                      text-align: center; padding: 10px;
                       border-radius: 5px;"
 
 sp <- sp(
@@ -266,10 +266,10 @@ sp <- sp(
   type = "points",
   facet_var = c("sex", "species"),
   include_legend = FALSE
-) |> 
-  sp_x_axis(rotation_axis_ticks = -90) |> 
-  sp_title(custom_css = custom_css_titles) |> 
-  SveltePlots::sp_facet(scales = "fixed") 
+) |>
+  sp_x_axis(rotation_axis_ticks = -90) |>
+  sp_title(custom_css = custom_css_titles) |>
+  SveltePlots::sp_facet(scales = "fixed")
 
 sp
 ```
@@ -281,47 +281,47 @@ We can add annotations with the `sp_add_segments`, `sp_add_arrows`, and `sp_add_
 ```{r}
 data("purchases")
 sp(
-  data = purchases_age, type = "line",
+  data = purchases, type = "line",
   mapping = spaes(x = date, y = revenue_roll, group = age),
   colors = c("red", "green", "blue"),
   combine_same_groups = TRUE
 ) |>
   sp_add_series(
-    data = purchases_age, 
-    mapping = spaes(x = date, y = revenue, group = age),
-    type = "points", 
-    alpha = 0.4,
-    tooltip = F, 
-    include_legend = F
-  ) |> 
-    sp_add_series(
-    data = purchases_age[purchases_age$revenue == max(purchases_age$revenue), ], 
+    data = purchases,
     mapping = spaes(x = date, y = revenue, group = age),
     type = "points",
-    size = 5, 
+    alpha = 0.4,
+    tooltip = F,
+    include_legend = F
+  ) |>
+  sp_add_series(
+    data = purchases[purchases$revenue == max(purchases$revenue), ],
+    mapping = spaes(x = date, y = revenue, group = age),
+    type = "points",
+    size = 5,
     tooltip = F
-    ) |> 
+  ) |>
   sp_add_segments(
     x_start = "2000-01-12", x_end = "2000-01-17",
-    y_start = "auto", y_end ="auto",
-    type = "rect", 
+    y_start = "auto", y_end = "auto",
+    type = "rect",
     opacity = 0.2,
     background_color = "black",
     text_color = "white",
-    show_legend = TRUE, 
+    show_legend = TRUE,
     legend_text = "Highest Revenue Day",
     tooltip = "Revenue: <strong>$13179</strong>"
-  ) |> 
+  ) |>
   sp_add_arrows(
     x_start = c("2000-03-01", "2000-03-01"), x_end = c("2000-01-15", "2000-01-15"),
     y_start = c(8000, 12000), y_end = c(10000, 13000),
     arrow_head = c(0, 0),
-    size = c(200, 200), 
-    curvature = c(0.2, 0.4), 
-    direction = c("downward", "downward"), 
+    size = c(200, 200),
+    curvature = c(0.2, 0.4),
+    direction = c("downward", "downward"),
     color = c("black", "black"),
     arrow_head_type = c("triangle", "triangle")
-  ) |> 
+  ) |>
   sp_add_text(
     x = c("2000-02-01", "2000-02-20"),
     y = c(12500, 8500),
@@ -329,7 +329,7 @@ sp(
       "This was the highest revenue day",
       "Window of Some Event Happening"
     )
-  ) 
+  )
 ```
 
 ## Segments
@@ -343,34 +343,34 @@ data("dau")
 head(segments)
 
 sp <- sp(
-  data = dau, 
+  data = dau,
   type = "line",
-  spaes(x = date, y = DAU), 
+  spaes(x = date, y = DAU),
   tooltip = FALSE
-) |> 
+) |>
   sp_add_series(
     data = dau,
     mapping = spaes(x = date, y = DAU),
     type = "points",
     size = 4,
     tooltip = TRUE,
-  ) |> 
+  ) |>
   sp_add_segments(
-    x_start = segments$start_date, 
+    x_start = segments$start_date,
     x_end = segments$end_date,
     y_start = "even",
     y_end = "even",
-    type = "rect", 
-    opacity = 0.2, 
+    type = "rect",
+    opacity = 0.2,
     background_color = segments$colors,
     text_color = "white",
     show_legend = TRUE,
     legend_text = segments$event_type,
     tooltip = unlist(segments$extra_details),
     key = segments$key
-  ) |> 
-  sp_title("DAU", font_size = 24) |> 
-  sp_x_axis(rotation_axis_ticks = -30) 
+  ) |>
+  sp_title("DAU", font_size = 24) |>
+  sp_x_axis(rotation_axis_ticks = -30)
 
 sp
 ```
@@ -382,13 +382,13 @@ The custom tooltip works if we have a list column of tibbles named `custom_toolt
 ```{r}
 data("quests")
 
-quests <- quests |> 
+quests <- quests |>
   dplyr::rowwise() |>
   dplyr::mutate(
     custom_tooltip = dplyr::tibble(
       Installs = n.y,
       `Quest Start` = n.x,
-      Retention = as.character(round(retention, 4)*100)
+      Retention = as.character(round(retention, 4) * 100)
     ) |> list()
   ) |>
   dplyr::ungroup()
@@ -434,15 +434,15 @@ sp(
       dplyr::filter(Dept %in% c(38, 93, 95)),
     mapping = spaes(x = Date, y = Weekly_Sales, group = Dept),
     type = "line"
-  ) |> 
+  ) |>
   sp_add_series(
     data = walmart_sales_weekly |>
       dplyr::filter(Dept %in% c(8, 13)),
     mapping = spaes(x = Date, y = Weekly_Sales, group = Dept),
     type = "points"
-  ) |> 
-  sp_x_axis(rotation_axis_ticks = -30) |> 
-  sp_y_axis(format = "$,.3r") 
+  ) |>
+  sp_x_axis(rotation_axis_ticks = -30) |>
+  sp_y_axis(format = "$,.3r")
 ```
 
 ### CO2 Data 
@@ -456,11 +456,13 @@ CO2 <- CO2 |>
   dplyr::mutate(
     date = seq(
       as.Date("2023-01-01"),
-      as.Date("2023-01-01") + lubridate::days(83), by = "day")
+      as.Date("2023-01-01") + lubridate::days(83),
+      by = "day"
+    )
   )
 
 sp(
-  data = CO2, type = "line", 
+  data = CO2, type = "line",
   mapping = spaes(x = date, y = uptake, group = Type)
 ) |>
   sp_add_series(
@@ -469,11 +471,11 @@ sp(
     type = "line", tooltip = F
   ) |>
   sp_add_series(
-    data = CO2, mapping = 
+    data = CO2, mapping =
       spaes(x = date, y = conc, group = Type),
     type = "points"
   ) |>
-  sp_x_axis(format = "%b-%d") 
+  sp_x_axis(format = "%b-%d")
 ```
 
 ### Economics
@@ -482,36 +484,36 @@ sp(
 data("economics")
 
 sp(
-  data = economics, 
+  data = economics,
   mapping = spaes(x = date, y = unemploy),
   type = "line",
-  tooltip = T, 
+  tooltip = T,
   colors = "red"
 ) |>
   sp_add_series(
     data = economics,
-    mapping = spaes(x = date, y = pce), 
+    mapping = spaes(x = date, y = pce),
     type = "line",
-    tooltip = T, 
+    tooltip = T,
     colors = "green"
   ) |>
   sp_add_series(
     data = economics,
-    mapping = spaes(x = date, y = psavert), 
+    mapping = spaes(x = date, y = psavert),
     type = "line",
-    tooltip = F, 
+    tooltip = F,
     colors = "blue"
-  ) |> 
+  ) |>
   sp_x_axis(
-    format = "%b %Y", 
+    format = "%b %Y",
     ticks = 4,
     label = "Date",
     font_size_label = 14,
     font_size_ticks = 12,
     rotation_axis_ticks = -30
-  ) |> 
+  ) |>
   sp_y_axis(
-    font_size_label = 14, 
+    font_size_label = 14,
     font_size_ticks = 12
   )
 ```
@@ -524,9 +526,9 @@ The chart below shows hourly data with a rotation of the x-axis tick labels.
 # Generate hourly time series data for 7 days
 set.seed(123)
 start_time <- as.POSIXct("2022-01-01 00:00:00")
-end_time <- start_time + 1 * 24 * 3600  # 7 days in seconds
+end_time <- start_time + 1 * 24 * 3600 # 7 days in seconds
 timestamps <- seq(start_time, end_time, by = "hour")
-values <- rnorm(length(timestamps))  # Random values for demonstration purposes
+values <- rnorm(length(timestamps)) # Random values for demonstration purposes
 
 # Create a tibble
 hourly_tibble <- tibble(
@@ -535,11 +537,11 @@ hourly_tibble <- tibble(
 )
 
 sp(
-  data = hourly_tibble, 
+  data = hourly_tibble,
   mapping = spaes(x = timestamp, y = value),
-  type = "line", 
+  type = "line",
   include_legend = FALSE
-) |>  
+) |>
   sp_x_axis(
     label = "Date",
     rotation_axis_ticks = 90,

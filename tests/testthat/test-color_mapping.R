@@ -65,7 +65,6 @@ test_that("Make sure default colors repeat for more than 9 levels", {
 
 
 test_that("Default colors work in combination with added colors", {
-
   data("gapminder")
   gapminder <- gapminder %>%
     dplyr::mutate(
@@ -177,28 +176,28 @@ test_that("Same groups get colore differently based on specified input colors", 
 test_that("Same series get colored the same if no color is specified", {
   data("purchases")
   sp <- sp(
-    data = purchases_age,
+    data = purchases,
     type = "line",
-    mapping = spaes(x = adjusted_timestamp, y = revenue_roll, group = age),
+    mapping = spaes(x = date, y = revenue_roll, group = age),
     combine_same_groups = TRUE
   ) %>%
     sp_add_series(
-      data = purchases_age,
-      mapping = spaes(x = adjusted_timestamp, y = revenue, group = age),
+      data = purchases,
+      mapping = spaes(x = date, y = revenue, group = age),
       type = "points",
       alpha = 0.4
     ) %>%
     sp_add_series(
-      data = purchases_age[purchases_age$revenue == max(purchases_age$revenue), ],
-      mapping = spaes(x = adjusted_timestamp, y = revenue, group = age),
+      data = purchases[purchases$revenue == max(purchases$revenue), ],
+      mapping = spaes(x = date, y = revenue, group = age),
       type = "points",
       size = 5,
       tooltip = F
     )
   colors <- list(
-    `D0 - D7` = "#1F77B4",
-    `D8 - D30` = "#FF7F0E",
-    `D31+` = "#2CA02C"
+    `Young` = "#1F77B4",
+    `Middle` = "#FF7F0E",
+    `Old` = "#2CA02C"
   )
 
   expect_equal(sp$x$list_input[[1]]$color_mapping, colors)
@@ -208,34 +207,34 @@ test_that("Same series get colored the same if no color is specified", {
 test_that("Same series get colored differently if specified", {
   data("purchases")
   sp <- sp(
-    data = purchases_age,
+    data = purchases,
     type = "line",
-    mapping = spaes(x = adjusted_timestamp, y = revenue_roll, group = age),
+    mapping = spaes(x = date, y = revenue_roll, group = age),
     combine_same_groups = FALSE
   ) %>%
     sp_add_series(
-      data = purchases_age,
-      mapping = spaes(x = adjusted_timestamp, y = revenue, group = age),
+      data = purchases,
+      mapping = spaes(x = date, y = revenue, group = age),
       type = "points",
       alpha = 0.4,
       colors = c("black", "pink", "violet")
     ) %>%
     sp_add_series(
-      data = purchases_age[purchases_age$revenue == max(purchases_age$revenue), ] %>% droplevels(),
-      mapping = spaes(x = adjusted_timestamp, y = revenue, group = age),
+      data = purchases[purchases$revenue == max(purchases$revenue), ] %>% droplevels(),
+      mapping = spaes(x = date, y = revenue, group = age),
       type = "points",
       size = 5,
       tooltip = F,
       colors = "red"
     )
   colors <- list(
-    `D0 - D7` = "#1F77B4",
-    `D8 - D30` = "#FF7F0E",
-    `D31+` = "#2CA02C",
-    `D0 - D7` = "black",
-    `D8 - D30` = "pink",
-    `D31+` = "violet",
-    `D31+` = "red"
+    `Young` = "#1F77B4",
+    `Middle` = "#FF7F0E",
+    `Old` = "#2CA02C",
+    `Young` = "black",
+    `Middle` = "pink",
+    `Old` = "violet",
+    `Old` = "red"
   )
 
 

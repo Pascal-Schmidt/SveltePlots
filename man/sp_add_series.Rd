@@ -118,22 +118,22 @@ sp <- SveltePlots::sp(
   )
 
 sp(
-  data = purchases_age,
-  mapping = spaes(x = adjusted_timestamp, y = revenue_roll, group = age),
+  data = purchases,
+  mapping = spaes(x = date, y = revenue_roll, group = age),
   type = "line",
   colors = c("red", "green", "blue"),
   combine_same_groups = FALSE
 ) \%>\%
   sp_add_series(
-    data = purchases_age,
-    mapping = spaes(x = adjusted_timestamp, y = revenue, group = age),
+    data = purchases,
+    mapping = spaes(x = date, y = revenue, group = age),
     type = "points",
     alpha = 0.4,
     tooltip = FALSE,
   ) \%>\%
   sp_add_series(
-    data = purchases_age[purchases_age$revenue == max(purchases_age$revenue), ],
-    mapping = spaes(x = adjusted_timestamp, y = revenue, group = age),
+    data = purchases[purchases$revenue == max(purchases$revenue), ],
+    mapping = spaes(x = date, y = revenue, group = age),
     type = "points",
     size = 5,
      tooltip = FALSE
