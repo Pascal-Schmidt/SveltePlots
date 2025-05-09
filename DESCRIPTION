@@ -6,8 +6,11 @@ Authors@R:
   person("Pascal", "Schmidt", role = c("aut", "cre"), email = "pascal.sfu@gmail.com")
 Author: Pascal Schmidt [aut, cre]
 Maintainer: Pascal Schmidt <pascal.sfu@gmail.com>
-Description: SveltePlots is an interactive charting library which aims to easily produce SVG charts. 
-  In addition to that is was developed to remove renderUI, insertUI, removeUI, and proxy function through Svelte's excellent state management. 
+Description: SveltePlots is an interactive charting library designed to easily produce SVG-based visualizations using R. 
+  It leverages Svelte's reactive state management to eliminate the need for Shiny's renderUI, insertUI, removeUI, and proxy functions, 
+  resulting in a more streamlined and efficient workflow for building dynamic plots. 
+URL: https://github.com/Pascal-Schmidt/SveltePlots, https://pascal-schmidt.github.io/SveltePlots/
+BugReports: https://github.com/Pascal-Schmidt/SveltePlots/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -23,5 +26,5 @@ Suggests:
 Config/testthat/edition: 3
 Imports: data.table, htmlwidgets, magrittr, dplyr, rlang, RColorBrewer, padr, purrr, stringr, tibble, tidyr
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5.0)
 Language: en-US
