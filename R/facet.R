@@ -23,17 +23,16 @@
 #' sp
 #' @export
 sp_facet <- function(sp, ncol = NULL, nrow = NULL, scales = "fixed") {
-
   dfs <- split(data.table::as.data.table(sp$x$list_input[[1]]$data), by = "facet_var")
 
   sp$x$list_input[[1]]$data <- NULL
   length_dfs <- length(dfs)
-  if(is.null(ncol) & is.null(nrow)) {
-    first <- floor(length_dfs/2)
+  if (is.null(ncol) & is.null(nrow)) {
+    first <- floor(length_dfs / 2)
     second <- length_dfs - first
     ncol <- first
     nrow <- second
-  } else if(is.null(ncol)) {
+  } else if (is.null(ncol)) {
     ncol <- length_dfs - nrow
   } else {
     nrow <- length_dfs - ncol
@@ -49,9 +48,9 @@ sp_facet <- function(sp, ncol = NULL, nrow = NULL, scales = "fixed") {
     sp$x$list_input[[i]]$header <- names(dfs)[[i]]
   }
 
-  if(scales == "fixed") {
+  if (scales == "fixed") {
     temp <- data.table::rbindlist(do.call("rbind", dfs)[["data"]])
-    if(sp$x$list_input[[1]]$x_axis_type == "factor") {
+    if (sp$x$list_input[[1]]$x_axis_type == "factor") {
       x_range <- unique(temp$x)
     } else {
       x_range <- range(temp$x)
@@ -64,5 +63,4 @@ sp_facet <- function(sp, ncol = NULL, nrow = NULL, scales = "fixed") {
   }
 
   return(sp)
-
 }

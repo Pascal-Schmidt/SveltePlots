@@ -12,7 +12,7 @@
 #'
 #' @export
 sp_title <- function(sp, title = NULL, text_align = "left", color = "black", font_size = 16, font_weight = "bold", custom_css = "") {
-  if(!is.null(title)) {
+  if (!is.null(title)) {
     sp$x$list_input[[1]]$header <- title
   }
   sp$x$list_input[[1]]$title_align <- text_align
@@ -72,20 +72,19 @@ sp_tooltip <- function(
     animation = FALSE, # whether to animate the tooltip
     animation_params = NULL,
     justify_content = "space-between",
-    cross_hair = FALSE
-) {
-  if(!is.null(type)) {
+    cross_hair = FALSE) {
+  if (!is.null(type)) {
     sp$x$list_input[[1]]$tooltip <- type
   }
-  if(!is.null(format)) {
+  if (!is.null(format)) {
     sp$x$list_input[[1]]$format <- format
   }
-  if(!is.null(format)) {
+  if (!is.null(format)) {
     sp$x$list_input[[1]]$border_color_tt <- border_color
   }
-  if(!animation) {
+  if (!animation) {
     animation_params <- list(duration = 0, delay = 0)
-  } else if(animation & is.null(animation_params)) {
+  } else if (animation & is.null(animation_params)) {
     animation_params <- list(duration = 500, delay = 0)
   }
   sp$x$list_input[[1]]$background_color_tt <- background_color
@@ -104,5 +103,3 @@ sp_tooltip <- function(
   sp$x$list_input[[1]]$crosshair <- cross_hair
   return(sp)
 }
-
-

@@ -48,11 +48,9 @@ create_configurations <- function(
     header = "",
     height = 500,
     show_legend = TRUE,
-
     ##################
     ### axis props ###
     #################
-
     ### x-axis ###
     xaxis_ticks = 6,
     dx = "0em",
@@ -66,7 +64,6 @@ create_configurations <- function(
     x_axis_type = NULL,
     x_label = NULL,
     format_xaxis = NULL,
-
     ### y-axis ###
     format_yaxis = ",.3r",
     yaxis_ticks = 6,
@@ -77,9 +74,7 @@ create_configurations <- function(
     tooltip = NULL,
     interval = NULL,
     time_interval = NULL,
-    colors = c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD", "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF")
-) {
-
+    colors = c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD", "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF")) {
   default_list <- list(
     id = id,
     data = data,
@@ -112,7 +107,6 @@ create_configurations <- function(
     yaxis_ticks = yaxis_ticks,
     format_tooltip = format_tooltip,
     y_label = y_label,
-
     tooltip = tooltip,
     interval = interval,
     time_interval = time_interval,
@@ -120,6 +114,4 @@ create_configurations <- function(
   )
 
   return(default_list)
-
 }
-

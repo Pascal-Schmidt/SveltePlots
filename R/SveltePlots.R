@@ -3,13 +3,12 @@
 #' @param list_input This is a list inside a list or a list of lists which contain the chart specifications used by Svelte to generate the chart.
 #' @keywords internal
 SveltePlots <- function(list_input) {
-
   # forward options using x
   x <- list(
     list_input = list(list_input)
   )
 
-  attr(x, 'TOJSON_ARGS') <- list(dataframe = "rows")
+  attr(x, "TOJSON_ARGS") <- list(dataframe = "rows")
 
   # create widget
   sp <- htmlwidgets::createWidget(
@@ -25,7 +24,6 @@ SveltePlots <- function(list_input) {
   )
 
   return(sp)
-
 }
 #' Shiny bindings for SveltePlots
 #'
@@ -44,13 +42,15 @@ SveltePlots <- function(list_input) {
 #' @name SveltePlots-shiny
 #'
 #' @export
-SveltePlotsOutput <- function(outputId, width = '100%', height = '400px'){
-  htmlwidgets::shinyWidgetOutput(outputId, 'SveltePlots', width, height, package = 'SveltePlots')
+SveltePlotsOutput <- function(outputId, width = "100%", height = "400px") {
+  htmlwidgets::shinyWidgetOutput(outputId, "SveltePlots", width, height, package = "SveltePlots")
 }
 
 #' @rdname SveltePlots-shiny
 #' @export
 renderSveltePlots <- function(expr, env = parent.frame(), quoted = FALSE) {
-  if (!quoted) { expr <- substitute(expr) } # force quoted
+  if (!quoted) {
+    expr <- substitute(expr)
+  } # force quoted
   htmlwidgets::shinyRenderWidget(expr, SveltePlotsOutput, env, quoted = TRUE)
 }

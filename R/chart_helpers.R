@@ -1,5 +1,5 @@
 # Declare global variables to avoid R CMD check warnings
-utils::globalVariables(c("x", "group", "y", "id", "y_start", "density", "opacity", "type", "fill", "hist", "counts", "x_start", "x_end", "."))
+utils::globalVariables(c("x", "group", "y", "id", "y_start", "density", "opacity", "type", "fill", "hist", "counts", "x_start", "x_end", ".", "colors", "facet_var", "y_og"))
 
 #' Internal: Mutate Mapping for Chart Data
 #'
@@ -17,7 +17,6 @@ utils::globalVariables(c("x", "group", "y", "id", "y_start", "density", "opacity
 #' @return Modified chart configurations.
 #' @keywords internal
 mutate_mapping <- function(data, mapping, create_configurations, size, alpha, tooltip, colors = NULL, mode, include_legend, breaks, facet_var) {
-
   stopifnot("No data frame supplied" = is.data.frame(data), inherits(mapping, "spaes"))
 
   data_names <- stringr::str_remove_all(as.character(mapping), "\\`")
@@ -25,9 +24,9 @@ mutate_mapping <- function(data, mapping, create_configurations, size, alpha, to
   names_list <- stats::setNames(as.list(data_names), svelte_names)
   data <- data |> dplyr::select(!!!names_list, facet_var, dplyr::any_of("custom_tooltip"))
 
-  if(create_configurations$type == "density") {
+  if (create_configurations$type == "density") {
     names_list <- append(names_list, list(y = "Density"))
-  } else if(create_configurations$type == "histogram") {
+  } else if (create_configurations$type == "histogram") {
     names_list <- append(names_list, list(y = "Count"))
   }
 
@@ -36,25 +35,24 @@ mutate_mapping <- function(data, mapping, create_configurations, size, alpha, to
   create_configurations$y_label <- names_list$y
 
   # if there is no grouping column yet add it with column name of y-axis
-  if(!rlang::has_name(data, "group")) {
+  if (!rlang::has_name(data, "group")) {
     data[["group"]] <- names_list$y
   }
 
   # time-series, scatter charts, line charts
-  if(create_configurations$type %in% c("points", "line")) {
+  if (create_configurations$type %in% c("points", "line")) {
     create_configurations <- xy_chart(data, create_configurations, size, alpha, tooltip, colors, include_legend, facet_var)
-  } else if(create_configurations$type == "bar") {
+  } else if (create_configurations$type == "bar") {
     create_configurations <- bar_chart(data, create_configurations, size, alpha, tooltip, colors, mode, include_legend, facet_var)
-  } else if(create_configurations$type == "histogram") {
+  } else if (create_configurations$type == "histogram") {
     create_configurations <- histogram(data, create_configurations, size, alpha, tooltip, colors, breaks, include_legend, facet_var)
-  } else if(create_configurations$type == "density") {
+  } else if (create_configurations$type == "density") {
     create_configurations <- density_chart(data, create_configurations, size, alpha, tooltip, colors, include_legend, facet_var)
   } else {
     stop(stringr::str_glue("Type {create_configurations$type} not valid"))
   }
 
   return(create_configurations)
-
 }
 
 #' Internal: Prepare Density Chart Data
@@ -66,7 +64,6 @@ mutate_mapping <- function(data, mapping, create_configurations, size, alpha, to
 #' @return Configuration list with modified data for density chart.
 #' @keywords internal
 density_chart <- function(data, create_configurations, size, alpha, tooltip, colors, include_legend, facet_var) {
-
   data <- data |>
     dplyr::group_by(group) |>
     dplyr::summarise(
@@ -75,7 +72,7 @@ density_chart <- function(data, create_configurations, size, alpha, tooltip, col
     dplyr::ungroup()
 
   # coerce group column into a factor
-  if(!is.factor(data[["group"]])) {
+  if (!is.factor(data[["group"]])) {
     data <- dplyr::mutate(data, group = factor(group))
   }
 
@@ -101,7 +98,7 @@ density_chart <- function(data, create_configurations, size, alpha, tooltip, col
           colors = unname(color_mapping[names(color_mapping) == names(data)[i]]),
           tooltip = tooltip,
           type = create_configurations$type,
-          fill =  unname(color_mapping[names(color_mapping) == names(data)[i]]),
+          fill = unname(color_mapping[names(color_mapping) == names(data)[i]]),
           include_legend = include_legend,
           data = data[[i]] |>
             list()
@@ -115,7 +112,6 @@ density_chart <- function(data, create_configurations, size, alpha, tooltip, col
   create_configurations$color_mapping <- as.list(color_mapping)
   create_configurations$data <- json_df
   return(create_configurations)
-
 }
 
 #' Internal: Prepare XY Chart Data
@@ -128,17 +124,16 @@ density_chart <- function(data, create_configurations, size, alpha, tooltip, col
 #' @return Configuration list with modified data for XY chart.
 #' @keywords internal
 xy_chart <- function(data, create_configurations, size, alpha, tooltip, colors, include_legend, facet_var) {
-
   # create data table
   data <- data.table::as.data.table(data)
 
   # coerce group column into a factor
-  if(!is.factor(data[["group"]])) {
+  if (!is.factor(data[["group"]])) {
     data <- data[, group := factor(group)]
   }
 
   # if the x-axis is of type factor or dates, it needs to be ordered for svelte to plot it properly
-  if(create_configurations$x_axis_type %in% c("factor", "date")) {
+  if (create_configurations$x_axis_type %in% c("factor", "date")) {
     data <- data.table::setorder(data, x, group)
   } else {
     data <- data.table::setorder(data, group)
@@ -151,7 +146,11 @@ xy_chart <- function(data, create_configurations, size, alpha, tooltip, colors, 
   data <- Filter(function(df) nrow(df) > 0, data)
   json_df <- dplyr::tibble()
   group_name <- sub("\\..*", "", names(data))
-  facet <- if(is.null(facet_var)) {NULL} else { gsub("\\.", " ", sub("^[^.]*\\.", "", names(data)))}
+  facet <- if (is.null(facet_var)) {
+    NULL
+  } else {
+    gsub("\\.", " ", sub("^[^.]*\\.", "", names(data)))
+  }
   for (i in seq_along(data)) {
     json_df <- json_df |>
       dplyr::bind_rows(
@@ -168,7 +167,13 @@ xy_chart <- function(data, create_configurations, size, alpha, tooltip, colors, 
           include_legend = include_legend,
           data = data[[i]] |>
             dplyr::mutate(
-              x = if(inherits(data[[i]][["x"]], c("Date", "POSIXct", "POSIXt"))) {format(x, create_configurations$time_interval)} else if(inherits(data[[i]][["x"]], c("character", "factor"))) {as.character(x)} else {as.numeric(x)}
+              x = if (inherits(data[[i]][["x"]], c("Date", "POSIXct", "POSIXt"))) {
+                format(x, create_configurations$time_interval)
+              } else if (inherits(data[[i]][["x"]], c("character", "factor"))) {
+                as.character(x)
+              } else {
+                as.numeric(x)
+              }
             ) |>
             list()
         ) |>
@@ -177,7 +182,7 @@ xy_chart <- function(data, create_configurations, size, alpha, tooltip, colors, 
   }
 
   # if the x variable is a date type needs o be time-series for svelte to transform the date later
-  if(inherits(data[[i]][["x"]], c("Date", "POSIXct", "POSIXt"))) {
+  if (inherits(data[[i]][["x"]], c("Date", "POSIXct", "POSIXt"))) {
     create_configurations$type <- "timeseries"
   }
 
@@ -186,7 +191,6 @@ xy_chart <- function(data, create_configurations, size, alpha, tooltip, colors, 
   create_configurations$color_mapping <- as.list(color_mapping)
   create_configurations$data <- json_df
   return(create_configurations)
-
 }
 
 #' Internal: Prepare Bar Chart Data
@@ -199,14 +203,13 @@ xy_chart <- function(data, create_configurations, size, alpha, tooltip, colors, 
 #' @return Configuration list with modified data for bar chart.
 #' @keywords internal
 bar_chart <- function(data, create_configurations, size, alpha, tooltip, colors, mode, include_legend, facet_var) {
-
   create_configurations$mode <- mode
   data <- data.table::as.data.table(data)
 
-  if(!is.factor(data$x)) {
+  if (!is.factor(data$x)) {
     data <- data[, x := factor(x, levels = unique(x))]
   }
-  if(!is.factor(data$group)) {
+  if (!is.factor(data$group)) {
     data <- data[, group := factor(group, levels = unique(group))]
   }
 
@@ -218,10 +221,10 @@ bar_chart <- function(data, create_configurations, size, alpha, tooltip, colors,
 
   color_mapping <- initial_color_mapping(data, colors, create_configurations)
 
-  if(mode=="stacked") {
+  if (mode == "stacked") {
     data <- data[, c("y", "y_start") := .(cumsum(y), data.table::shift(cumsum(y), fill = 0)), by = x]
-  } else if(mode=="percent") {
-    data <- data[, y := y/sum(y), by = "x"]
+  } else if (mode == "percent") {
+    data <- data[, y := y / sum(y), by = "x"]
     data <- data[, c("y", "y_start") := .(cumsum(y), data.table::shift(cumsum(y), fill = 0)), by = x]
   } else {
     data <- data[, y_start := ifelse(y > 0, 0, y)]
@@ -231,12 +234,12 @@ bar_chart <- function(data, create_configurations, size, alpha, tooltip, colors,
   create_configurations$color_mapping <- as.list(color_mapping)
   data <- data |>
     dplyr::inner_join(
-      tibble::enframe(color_mapping, name = "group", value = "colors"), by = "group"
+      tibble::enframe(color_mapping, name = "group", value = "colors"),
+      by = "group"
     )
   data$include_legend <- include_legend
   create_configurations$data <- data
   return(create_configurations)
-
 }
 
 #' Internal: Prepare Histogram Data
@@ -248,7 +251,6 @@ bar_chart <- function(data, create_configurations, size, alpha, tooltip, colors,
 #' @return Configuration list with modified data for histogram.
 #' @keywords internal
 histogram <- function(data, create_configurations, size, alpha, tooltip, colors, breaks, include_legend, facet_var) {
-
   data <- data |>
     dplyr::group_by(group) |>
     dplyr::summarise(
@@ -258,9 +260,9 @@ histogram <- function(data, create_configurations, size, alpha, tooltip, colors,
     dplyr::mutate(
       breaks = purrr::map(hist, `[`, "breaks"),
       counts = purrr::map(hist, `[`, "counts"),
-      counts = purrr::map(counts, ~unlist(.x)),
-      x_start = purrr::map(breaks, ~unlist(.x) %>% .[-length(.)]),
-      x_end = purrr::map(breaks, ~unlist(.x) %>% .[-1])
+      counts = purrr::map(counts, ~ unlist(.x)),
+      x_start = purrr::map(breaks, ~ unlist(.x) %>% .[-length(.)]),
+      x_end = purrr::map(breaks, ~ unlist(.x) %>% .[-1])
     ) |>
     dplyr::select(-c(hist, breaks)) |>
     tidyr::unnest(cols = c(counts, x_start, x_end)) |>
@@ -268,7 +270,7 @@ histogram <- function(data, create_configurations, size, alpha, tooltip, colors,
     dplyr::mutate(opacity = alpha)
 
   data <- data.table::as.data.table(data)
-  if(!is.factor(data$group)) {
+  if (!is.factor(data$group)) {
     data <- data[, group := factor(group, levels = unique(group))]
   }
 
@@ -278,14 +280,11 @@ histogram <- function(data, create_configurations, size, alpha, tooltip, colors,
   create_configurations$color_mapping <- as.list(color_mapping)
   data <- data |>
     dplyr::inner_join(
-      tibble::enframe(color_mapping, name = "group", value = "colors"), by = "group"
+      tibble::enframe(color_mapping, name = "group", value = "colors"),
+      by = "group"
     ) |>
     dplyr::mutate(id = paste0(colors, x_start, x_end, group))
 
   create_configurations$data <- data
   return(create_configurations)
-
 }
-
-
-

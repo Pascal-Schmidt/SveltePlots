@@ -39,11 +39,10 @@
 #' @export
 sp <- function(data, mapping, type, mode = "grouped", size = 2, alpha = 1, tooltip = TRUE, include_legend = TRUE, colors = NULL,
                height = 500, combine_same_groups = TRUE, breaks = "Sturges", facet_var = NULL) {
-
   create_configurations <- create_configurations()
   create_configurations$combine_same_groups <- combine_same_groups
   create_configurations$facet_var <- facet_var
-  if("custom_tooltip" %in% colnames(data)) {
+  if ("custom_tooltip" %in% colnames(data)) {
     create_configurations$custom_tooltip_data <- TRUE
   }
 
@@ -53,17 +52,14 @@ sp <- function(data, mapping, type, mode = "grouped", size = 2, alpha = 1, toolt
   create_configurations$height <- height
 
   # determine the type of the x-axis and tooltips
-  if(inherits(data[[as.character(mapping$x)]], c("numeric", "integer"))) {
-
+  if (inherits(data[[as.character(mapping$x)]], c("numeric", "integer"))) {
     # define tooltip and axis class
     create_configurations$x_axis_type <- "numeric"
     create_configurations$tooltip <- "single"
 
     # x-axis format
     create_configurations$format_xaxis <- ",.3r"
-
-  } else if(inherits(data[[as.character(mapping$x)]], c("Date", "POSIXct", "POSIXt"))) {
-
+  } else if (inherits(data[[as.character(mapping$x)]], c("Date", "POSIXct", "POSIXt"))) {
     # determine time-series interval
     create_configurations$time_series_interval <- time_series_interval(data[[as.character(mapping$x)]])
 
@@ -82,13 +78,10 @@ sp <- function(data, mapping, type, mode = "grouped", size = 2, alpha = 1, toolt
 
     # get interval for time-series
     create_configurations$interval <- padr::get_interval(stats::na.omit(data[[as.character(mapping$x)]]))
-
   } else {
-
     # define tooltip and axis class
     create_configurations$x_axis_type <- "factor"
     create_configurations$tooltip <- "vertical_line"
-
   }
 
   create_configurations <- mutate_mapping(
@@ -96,5 +89,4 @@ sp <- function(data, mapping, type, mode = "grouped", size = 2, alpha = 1, toolt
   )
 
   return(SveltePlots(create_configurations))
-
 }
