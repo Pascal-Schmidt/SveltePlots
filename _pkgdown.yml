@@ -59,7 +59,7 @@ reference:
       - fruit
       - gapminder
       - penguins
-      - purchases_age
+      - purchases
       - quests
       - segments
       - walmart_sales_weekly
