@@ -42,6 +42,9 @@ color scheme is applied.}
 
 \item{second_axis}{A logical value indicating if the series should be plotted on a secondary y-axis on the right side. Values will be scaled by default to the domain of the first y-axis.}
 }
+\value{
+An object of class \code{htmlwidget} representing the plot with a series added.
+}
 \description{
 This function adds additional series to an existing SveltePlot chart. It supports adding
 lines or points with customizable aesthetics such as color, size, and opacity. This is particularly
@@ -62,18 +65,18 @@ sp(
   mapping = spaes(x = date, y = unemploy),
   colors = "red"
 ) \%>\%
- sp_add_series(
-  data = economics,
-  mapping = spaes(x = date, y = pce),
-  type = "line",
-  colors = "green"
- ) \%>\%
- sp_add_series(
-  data = economics,
-  mapping = spaes(x = date, y = psavert),
-  type = "line",
-  colors = "blue"
-)
+  sp_add_series(
+    data = economics,
+    mapping = spaes(x = date, y = pce),
+    type = "line",
+    colors = "green"
+  ) \%>\%
+  sp_add_series(
+    data = economics,
+    mapping = spaes(x = date, y = psavert),
+    type = "line",
+    colors = "blue"
+  )
 
 data("gapminder")
 
@@ -136,6 +139,6 @@ sp(
     mapping = spaes(x = date, y = revenue, group = age),
     type = "points",
     size = 5,
-     tooltip = FALSE
+    tooltip = FALSE
   )
 }

@@ -15,6 +15,9 @@ sp_facet(sp, ncol = NULL, nrow = NULL, scales = "fixed")
 
 \item{scales}{A character string specifying whether scales are shared across all facets. Options are "fixed" (default) or "free".}
 }
+\value{
+An object of class \code{htmlwidget} representing the facetted plot.
+}
 \description{
 This function creates multiple charts based on a specified faceting variable.
 }

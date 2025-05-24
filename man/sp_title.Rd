@@ -29,6 +29,9 @@ sp_title(
 
 \item{custom_css}{Some custom css for the title.}
 }
+\value{
+An object of class \code{htmlwidget} representing the plot with an added title.
+}
 \description{
 This function sets the title properties for SveltePlots charts, including text alignment, color, font size, font weight, and padding.
 }

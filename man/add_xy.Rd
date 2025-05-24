@@ -41,9 +41,6 @@ add_xy(
 
 \item{include_legend}{A logical value indicating whether to include the series in the chart legend.}
 }
-\value{
-Modified SveltePlot object with updated XY data.
-}
 \description{
 This function adds XY (scatter or line) data to a SveltePlot chart. It supports customization
 of aesthetics such as color, size, opacity, and more. It is used to overlay data points, lines,

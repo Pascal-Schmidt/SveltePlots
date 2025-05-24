@@ -65,6 +65,9 @@ sp_x_axis(
 
 \item{linetype}{Character string specifying the line type for the axis trigger. Can be "solid", "dashed", etc. Default is "solid".}
 }
+\value{
+An object of class \code{htmlwidget} representing the plot with modified x-axis.
+}
 \description{
 Modifies labels, scales, and appearance of the x-axis in a SveltePlot chart. This function allows for customization
 of the x-axis, including label formatting, scale type (linear or logarithmic), tick marks, and more.

@@ -17,9 +17,6 @@ add_bars(sp, current_data, color_mapping, group_name, include_legend)
 
 \item{include_legend}{A logical value indicating whether to include the data series in the legend.}
 }
-\value{
-Configuration list with modified data for the bar chart.
-}
 \description{
 This function adds series to a SveltePlot chart, updating the internal data structure.
 It supports grouped and stacked bar charts with customization of colors and legend entries.

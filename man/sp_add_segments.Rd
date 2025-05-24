@@ -73,6 +73,9 @@ own tooltip text.}
 
 \item{key}{Character vector specifying keys for the segments or rectangles. Default assigns the keys from 1 to the number of rows in the data set. For more information see \href{https://learn.svelte.dev/tutorial/keyed-each-blocks}{Each keyed block}}
 }
+\value{
+An object of class \code{htmlwidget} representing the plot with segments added.
+}
 \description{
 Adds segments or rectangles to highlight specific areas or differences within a SveltePlot chart.
 This function can be used to draw attention to certain data points, ranges, or to compare groups.
@@ -108,7 +111,7 @@ sp(
   ) |>
   sp_add_segments(
     x_start = "2000-01-12", x_end = "2000-01-17",
-    y_start = "auto", y_end ="auto",
+    y_start = "auto", y_end = "auto",
     type = "rect",
     opacity = 0.2,
     background_color = "black",

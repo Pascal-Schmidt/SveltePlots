@@ -41,6 +41,9 @@ sp_add_arrows(
 
 \item{arrow_head}{Also not sure what it does.}
 }
+\value{
+An object of class \code{htmlwidget} representing the plot with arrows added.
+}
 \description{
 Adds arrows to a SveltePlot chart to illustrate directions, trends, or to point out specific data points.
 This function enhances the chart's ability to convey insights to the viewer.
@@ -72,7 +75,7 @@ sp(
   ) |>
   sp_add_segments(
     x_start = "2000-01-12", x_end = "2000-01-17",
-    y_start = "auto", y_end ="auto",
+    y_start = "auto", y_end = "auto",
     type = "rect",
     opacity = 0.2,
     background_color = "black",

@@ -35,6 +35,9 @@ sp_y_axis(
 
 \item{color_label}{Character string specifying the color of the x-axis label. Default is "black".}
 }
+\value{
+An object of class \code{htmlwidget} representing the plot with modified y-axis.
+}
 \description{
 Similar to \code{\link{sp_x_axis}}, but for the y-axis. This function customizes the appearance and scaling of the y-axis,
 including label formatting, tick marks, and label and tick colors.

@@ -33,6 +33,9 @@ Valid options are "start", "middle", or "end".}
 
 \item{style}{Optional CSS style string to apply to the text.}
 }
+\value{
+An object of class \code{htmlwidget} representing the plot with text annotations.
+}
 \description{
 Adds text annotations at specified positions on a SveltePlot chart. This function can be used to label specific
 parts of a chart, display values, or add any other textual information.
@@ -64,7 +67,7 @@ sp(
   ) |>
   sp_add_segments(
     x_start = "2000-01-12", x_end = "2000-01-17",
-    y_start = "auto", y_end ="auto",
+    y_start = "auto", y_end = "auto",
     type = "rect",
     opacity = 0.2,
     background_color = "black",
