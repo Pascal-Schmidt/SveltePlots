@@ -8,7 +8,6 @@
 #' @param color_mapping A named list mapping group names to colors.
 #' @param group_name The names of the series.
 #' @param include_legend A logical value indicating whether to include the data series in the legend.
-#' @return Configuration list with modified data for the bar chart.
 #' @keywords internal
 add_bars <- function(sp, current_data, color_mapping, group_name, include_legend) {
   order_x <- unique(
@@ -68,7 +67,6 @@ add_bars <- function(sp, current_data, color_mapping, group_name, include_legend
 #' @param type A character string specifying the chart type ('line', 'points', etc.).
 #' @param second_axis A logical value indicating if the series should be plotted on a secondary y-axis.
 #' @param include_legend A logical value indicating whether to include the series in the chart legend.
-#' @return Modified SveltePlot object with updated XY data.
 #' @keywords internal
 add_xy <- function(sp, current_data, group_name, color_mapping, size, alpha, facet, tooltip, type, second_axis, include_legend) {
   json_df <- dplyr::tibble()
@@ -145,6 +143,7 @@ add_xy <- function(sp, current_data, group_name, color_mapping, size, alpha, fac
 #' @param tooltip A logical value indicating whether tooltips should be shown on hover. Default is \code{TRUE}.
 #' @param include_legend A logical value indicating whether a legend entry should be added for the series. Default is \code{TRUE}.
 #' @param second_axis A logical value indicating if the series should be plotted on a secondary y-axis on the right side. Values will be scaled by default to the domain of the first y-axis.
+#' @returns An object of class \code{htmlwidget} representing the plot with a series added.
 #' @importFrom data.table :=
 #' @importFrom magrittr %>%
 #' @examples

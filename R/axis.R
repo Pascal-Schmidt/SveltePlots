@@ -23,7 +23,7 @@
 #' @param dominant_baseline Character string specifying the dominant-baseline attribute for the x-axis labels and ticks. Default is NULL.
 #' @param trigger Character string specifying the trigger type for tooltips. Can be "axis" or "single". Default is NULL and trigger is chosen based on x-axis type.
 #' @param linetype Character string specifying the line type for the axis trigger. Can be "solid", "dashed", etc. Default is "solid".
-#'
+#' @returns An object of class \code{htmlwidget} representing the plot with modified x-axis.
 #'
 #' @examples
 #' library(SveltePlots)
@@ -128,6 +128,7 @@ sp_x_axis <- function(
 #' including label formatting, tick marks, and label and tick colors.
 #'
 #' @inheritParams sp_x_axis
+#' @returns An object of class \code{htmlwidget} representing the plot with modified y-axis.
 #' @examples
 #' \dontrun{
 #' library(SveltePlots)

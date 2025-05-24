@@ -29,6 +29,7 @@
 #' @param outline_width Numeric vector specifying the width of the outline of the rectangles. Default is 1.
 #' @param outline_color Character vector specifying the color of the outline of the rectangles. Default is "black".
 #' @param key Character vector specifying keys for the segments or rectangles. Default assigns the keys from 1 to the number of rows in the data set. For more information see \href{https://learn.svelte.dev/tutorial/keyed-each-blocks}{Each keyed block}
+#' @returns An object of class \code{htmlwidget} representing the plot with segments added.
 #' @examples
 #'
 #' library(SveltePlots)
@@ -128,7 +129,6 @@
 #'   sp_x_axis(rotation_axis_ticks = -30)
 #'
 #' sp
-
 #' @export
 sp_add_segments <- function(
     sp, x_start, x_end, y_start = "even", y_end = "even", type = "lines",
@@ -215,6 +215,7 @@ sp_add_segments <- function(
 #' @param text_anchor Character vector specifying the text alignment relative to its (\code{x}, \code{y}) position.
 #' Valid options are "start", "middle", or "end".
 #' @param style Optional CSS style string to apply to the text.
+#' @returns An object of class \code{htmlwidget} representing the plot with text annotations.
 #' @examples
 #' library(SveltePlots)
 #' data("purchases")
@@ -313,7 +314,7 @@ sp_add_text <- function(
 #' @param curvature Numeric vector specifying the curvature of the arrows. This is useful for creating curved arrows that can more naturally point between two points on the chart.
 #' @param direction Character vector specifying the direction of the arrow. Valid options are "upward" or "downward". Default is "upward".
 #' @param arrow_head Also not sure what it does.
-#'
+#' @returns An object of class \code{htmlwidget} representing the plot with arrows added.
 #'
 #' @examples
 #' library(SveltePlots)

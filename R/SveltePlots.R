@@ -38,7 +38,7 @@ SveltePlots <- function(list_input) {
 #' @param env The environment in which to evaluate \code{expr}.
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
 #'   is useful if you want to save an expression in a variable.
-#'
+#' @returns No return value. Called for side effects in a 'shiny' app context.
 #' @name SveltePlots-shiny
 #'
 #' @export
@@ -47,6 +47,7 @@ SveltePlotsOutput <- function(outputId, width = "100%", height = "400px") {
 }
 
 #' @rdname SveltePlots-shiny
+#' @returns No return value. Called for side effects in a 'shiny' app context.
 #' @export
 renderSveltePlots <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) {

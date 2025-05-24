@@ -57,16 +57,16 @@
 #'
 #' @format A data frame with 10 rows and 4 variables:
 #' \describe{
-#'   \item{adjusted_timestamp}{Date. The timestamp of the revenue data.}
+#'   \item{date}{Date. The timestamp of the revenue data.}
 #'   \item{age}{Factor. The age range category.}
 #'   \item{revenue}{Numeric. The revenue for the given date.}
 #'   \item{revenue_roll}{Numeric. The rolling revenue calculation.}
 #' }
 #'
 #' @examples
-#' data(purchases_age)
-#' head(purchases_age)
-"purchases_age"
+#' data(purchases)
+#' head(purchases)
+"purchases"
 
 #' Walmart Weekly Sales Data
 #'
@@ -241,7 +241,3 @@
 #' data(dau)
 #' head(dau)
 "dau"
-
-
-
-

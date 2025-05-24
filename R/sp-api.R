@@ -9,7 +9,7 @@
 #' @param font_size Font size of the title text (default: 16).
 #' @param font_weight Font weight of the title text (default: "bold").
 #' @param custom_css Some custom css for the title.
-#'
+#' @returns An object of class \code{htmlwidget} representing the plot with an added title.
 #' @export
 sp_title <- function(sp, title = NULL, text_align = "left", color = "black", font_size = 16, font_weight = "bold", custom_css = "") {
   if (!is.null(title)) {
@@ -53,7 +53,7 @@ sp_title <- function(sp, title = NULL, text_align = "left", color = "black", fon
 #' @param justify_content How to justify the content inside the tooltip (default: "space-between").
 #' @param cross_hair Whether to enable crosshair (default: FALSE).
 #'
-#' @return A SveltePlots object with an attached tooltip.
+#' @returns A SveltePlots object with an attached tooltip.
 #' @export
 sp_tooltip <- function(
     sp,

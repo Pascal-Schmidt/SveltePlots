@@ -6,7 +6,7 @@
 #' @param ncol The number of columns in the facet grid. Default is NULL, which auto-calculates based on the number of rows.
 #' @param nrow The number of rows in the facet grid. Default is NULL, which auto-calculates based on the number of columns.
 #' @param scales A character string specifying whether scales are shared across all facets. Options are "fixed" (default) or "free".
-#'
+#' @returns An object of class \code{htmlwidget} representing the facetted plot.
 #' @details This function splits the data by the specified facet variable and creates multiple charts (facets) accordingly.
 #' The function can automatically determine the number of rows and columns in the facet grid if not specified.
 #'
