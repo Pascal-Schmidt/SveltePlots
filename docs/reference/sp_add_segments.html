@@ -170,26 +170,26 @@ own tooltip text.</p></dd>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"purchases"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="sp.html">sp</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  data <span class="op">=</span> <span class="va">purchases_age</span>, type <span class="op">=</span> <span class="st">"line"</span>,</span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">purchases</span>, type <span class="op">=</span> <span class="st">"line"</span>,</span></span>
 <span class="r-in"><span>  mapping <span class="op">=</span> <span class="fu"><a href="spaes.html">spaes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">revenue_roll</span>, group <span class="op">=</span> <span class="va">age</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"green"</span>, <span class="st">"blue"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  combine_same_groups <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  height <span class="op">=</span> <span class="fl">500</span></span></span>
 <span class="r-in"><span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="sp_add_series.html">sp_add_series</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    data <span class="op">=</span> <span class="va">purchases_age</span>,</span></span>
+<span class="r-in"><span>    data <span class="op">=</span> <span class="va">purchases</span>,</span></span>
 <span class="r-in"><span>    mapping <span class="op">=</span> <span class="fu"><a href="spaes.html">spaes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">revenue</span>, group <span class="op">=</span> <span class="va">age</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    type <span class="op">=</span> <span class="st">"points"</span>,</span></span>
 <span class="r-in"><span>    alpha <span class="op">=</span> <span class="fl">0.4</span>,</span></span>
-<span class="r-in"><span>    tooltip <span class="op">=</span> <span class="cn">F</span>,</span></span>
-<span class="r-in"><span>    include_legend <span class="op">=</span> <span class="cn">F</span></span></span>
+<span class="r-in"><span>    tooltip <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>    include_legend <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="sp_add_series.html">sp_add_series</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    data <span class="op">=</span> <span class="va">purchases_age</span><span class="op">[</span><span class="va">purchases_age</span><span class="op">$</span><span class="va">revenue</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">purchases_age</span><span class="op">$</span><span class="va">revenue</span><span class="op">)</span>, <span class="op">]</span>,</span></span>
+<span class="r-in"><span>    data <span class="op">=</span> <span class="va">purchases</span><span class="op">[</span><span class="va">purchases</span><span class="op">$</span><span class="va">revenue</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">purchases</span><span class="op">$</span><span class="va">revenue</span><span class="op">)</span>, <span class="op">]</span>,</span></span>
 <span class="r-in"><span>    mapping <span class="op">=</span> <span class="fu"><a href="spaes.html">spaes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">revenue</span>, group <span class="op">=</span> <span class="va">age</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    type <span class="op">=</span> <span class="st">"points"</span>,</span></span>
 <span class="r-in"><span>    size <span class="op">=</span> <span class="fl">5</span>,</span></span>
-<span class="r-in"><span>    tooltip <span class="op">=</span> <span class="cn">F</span></span></span>
+<span class="r-in"><span>    tooltip <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">sp_add_segments</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    x_start <span class="op">=</span> <span class="st">"2000-01-12"</span>, x_end <span class="op">=</span> <span class="st">"2000-01-17"</span>,</span></span>
